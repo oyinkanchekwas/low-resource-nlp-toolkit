@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "low-resource-nlp-toolkit"
+version = "0.1.0"
+description = "A robust Python toolkit for low-resource African language pre-processing, emotion labels, evaluation, and routing."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "Oyinkansola Onwuchekwa" }
+]
+keywords = [
+  "low-resource-nlp",
+  "african-languages",
+  "multilingual-nlp",
+  "emotion-recognition",
+  "language-routing",
+  "responsible-ai"
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Text Processing :: Linguistic"
+]
+dependencies = []
+
+[project.optional-dependencies]
+models = [
+  "numpy",
+  "scikit-learn",
+  "sentence-transformers",
+  "transformers"
+]
+dev = [
+  "pytest",
+  "ruff"
+]
+
+[project.urls]
+Homepage = "https://github.com/oyinkanchekwas/low-resource-nlp-toolkit"
+Issues = "https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/issues"
+
+[project.scripts]
+low-resource-nlp = "low_resource_nlp.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
