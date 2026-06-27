@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import List
 
+from ._version import __version__
 from .datasets import iter_text_records
 from .evaluation import classification_report
 from .labels import label_to_valence_arousal
@@ -22,6 +23,7 @@ def build_parser() -> argparse.ArgumentParser:
     """Build the CLI parser."""
 
     parser = argparse.ArgumentParser(description="Low-resource NLP pre-processing and routing tools.")
+    parser.add_argument("--version", action="version", version=f"low-resource-nlp {__version__}")
     subcommands = parser.add_subparsers(dest="command", required=True)
 
     normalise = subcommands.add_parser("normalise", help="Normalise a text string.")

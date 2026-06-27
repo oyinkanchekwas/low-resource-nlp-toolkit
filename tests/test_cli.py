@@ -9,6 +9,15 @@ from low_resource_nlp.cli import main
 
 
 class CliTests(unittest.TestCase):
+    def test_version_command_outputs_package_version(self) -> None:
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            with self.assertRaises(SystemExit) as exc:
+                main(["--version"])
+
+        self.assertEqual(exc.exception.code, 0)
+        self.assertIn("low-resource-nlp 0.1.0", buffer.getvalue())
+
     def test_route_command_outputs_json(self) -> None:
         buffer = io.StringIO()
         with redirect_stdout(buffer):

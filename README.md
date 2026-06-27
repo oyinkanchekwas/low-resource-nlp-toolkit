@@ -4,6 +4,8 @@ A public, research-facing Python toolkit for African language pre-processing, em
 
 The project is designed as a safe open-source wrapper around the kinds of NLP engineering problems that appear in low-resource and multilingual AI research: noisy text, code-switching, uneven label taxonomies, small datasets, and evaluation that must be transparent.
 
+Status: `0.1.0` release candidate from source. The first PyPI release should happen only after the release checklist, package build, and public documentation are reviewed.
+
 ## Why This Exists
 
 Low-resource NLP projects often spend too much time rebuilding the same foundations before modelling begins. This toolkit provides a dependable base layer:
@@ -35,6 +37,7 @@ flowchart LR
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
+low-resource-nlp --version
 ```
 
 Route a text sample:
@@ -58,7 +61,14 @@ low-resource-nlp label joy
 Run tests:
 
 ```bash
-python3 -m unittest discover -s tests
+make check
+```
+
+Without `make`:
+
+```bash
+python3 scripts/quality_gate.py
+PYTHONPATH=src python3 -m unittest discover -s tests
 ```
 
 ## Python Usage
@@ -86,6 +96,17 @@ Supported core modules:
 - `evaluation`: precision, recall, F1, macro/micro summaries, and confusion matrices.
 - `datasets`: simple CSV/JSONL readers for experiment scaffolding.
 
+## Public Project Materials
+
+- [Changelog](CHANGELOG.md)
+- [Contributing guide](CONTRIBUTING.md)
+- [Documentation index](docs/index.md)
+- [0.1.0 release plan](docs/release_plan_v0_1.md)
+- [Adoption notes](docs/adoption.md)
+- [Model card template](docs/model_card_template.md)
+- [Data statement template](docs/data_statement_template.md)
+- [Citation metadata](CITATION.cff)
+
 ## Roadmap
 
 - Add benchmark fixtures using public African language datasets.
@@ -97,3 +118,7 @@ Supported core modules:
 ## Responsible AI Notes
 
 This toolkit is for research and prototyping. Language, dialect, and emotion labels are socially and culturally sensitive. Do not treat routing or emotion predictions as identity labels, clinical assessments, or ground truth. Always evaluate with speakers, domain experts, and context-specific data.
+
+## External Use
+
+External use signals should be public and verifiable: issues from real users, pull requests, tutorial use, workshop demos, citations, package downloads, or adoption by a lab/community project. Self-generated activity should not be counted as impact.

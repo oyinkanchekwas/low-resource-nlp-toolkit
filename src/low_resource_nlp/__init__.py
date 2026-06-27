@@ -1,5 +1,6 @@
 """Low-resource NLP utilities for pre-processing, routing, labels, and evaluation."""
 
+from ._version import __version__
 from .labels import (
     CANONICAL_EMOTIONS,
     EmotionMapping,
@@ -23,4 +24,5 @@ __all__ = [
     "normalise_text",
     "parse_label_va",
     "tokenise_words",
+    "__version__",
 ]

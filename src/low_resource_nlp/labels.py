@@ -31,7 +31,6 @@ EMOTION_ALIASES: Dict[str, str] = {
     "happy": "joy",
     "happiness": "joy",
     "sad": "sadness",
-    "sad": "sadness",
     "positive sentiment": "positive",
     "negative sentiment": "negative",
     "none": "neutral",

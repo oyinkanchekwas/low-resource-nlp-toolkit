@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import csv
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Iterator, Mapping, Optional
 
@@ -16,7 +16,7 @@ class TextRecord:
     text: str
     label: Optional[str] = None
     language: Optional[str] = None
-    metadata: Mapping[str, str] = None
+    metadata: Mapping[str, str] = field(default_factory=dict)
 
 
 def iter_jsonl(path: str | Path) -> Iterator[Dict[str, object]]:

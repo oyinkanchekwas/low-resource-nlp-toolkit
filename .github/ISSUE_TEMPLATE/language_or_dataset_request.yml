@@ -1,0 +1,33 @@
+name: Language or dataset request
+description: Suggest a language profile, public fixture, or responsible data note.
+title: "[Request]: "
+labels: ["data", "language-coverage"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What language, dialect, dataset, or fixture are you proposing?
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Public source or reference
+      description: Link to the public source, paper, dataset card, or documentation.
+    validations:
+      required: true
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Known limitations
+      description: Note dialect coverage, code-switching, privacy, consent, or annotation concerns.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: This request does not include private data, credentials, or non-redistributable files.
+          required: true

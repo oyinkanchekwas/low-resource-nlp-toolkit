@@ -1,0 +1,12 @@
+site_name: Low-Resource NLP Toolkit
+site_description: Research-facing utilities for low-resource African language NLP.
+repo_url: https://github.com/oyinkanchekwas/low-resource-nlp-toolkit
+theme:
+  name: mkdocs
+nav:
+  - Home: index.md
+  - Roadmap: roadmap.md
+  - Release Plan: release_plan_v0_1.md
+  - Adoption Notes: adoption.md
+  - Model Card Template: model_card_template.md
+  - Data Statement Template: data_statement_template.md

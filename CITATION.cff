@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If this toolkit supports your research or teaching, please cite it."
+title: "Low-Resource NLP Toolkit"
+type: software
+authors:
+  - family-names: "Onwuchekwa"
+    given-names: "Oyinkansola"
+repository-code: "https://github.com/oyinkanchekwas/low-resource-nlp-toolkit"
+license: MIT
+version: "0.1.0"
+keywords:
+  - low-resource-nlp
+  - african-languages
+  - multilingual-nlp
+  - emotion-recognition
+  - responsible-ai

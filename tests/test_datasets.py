@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from low_resource_nlp.datasets import iter_text_records, write_jsonl
+from low_resource_nlp.datasets import TextRecord, iter_text_records, write_jsonl
 
 
 class DatasetTests(unittest.TestCase):
@@ -17,6 +17,11 @@ class DatasetTests(unittest.TestCase):
         self.assertEqual(records[0].text, "hello")
         self.assertEqual(records[0].label, "joy")
         self.assertEqual(records[0].language, "eng")
+        self.assertEqual(records[0].metadata["label"], "joy")
+
+    def test_text_record_metadata_defaults_to_empty_mapping(self) -> None:
+        record = TextRecord(text="hello")
+        self.assertEqual(record.metadata, {})
 
     def test_write_jsonl(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
