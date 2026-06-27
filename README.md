@@ -4,7 +4,7 @@ A public, research-facing Python toolkit for African language pre-processing, em
 
 The project is designed as a safe open-source wrapper around the kinds of NLP engineering problems that appear in low-resource and multilingual AI research: noisy text, code-switching, uneven label taxonomies, small datasets, and evaluation that must be transparent.
 
-Status: `0.1.0` release candidate from source. The first PyPI release should happen only after the release checklist, package build, and public documentation are reviewed.
+Status: `0.1.0` release candidate from source. Local checks, CI, and isolated wheel builds are passing; PyPI is not published yet.
 
 ## Why This Exists
 
@@ -86,7 +86,7 @@ print(emotion)
 
 ## Current Scope
 
-The first public release deliberately avoids bundling private datasets or model weights. The core is deterministic, inspectable, and dependency-light. Later releases can add optional embedding and transformer backends while keeping the same interfaces.
+The first public release deliberately avoids bundling private datasets or model weights. The core is deterministic, inspectable, and dependency-light. Optional embedding and transformer backends are outside the current core package.
 
 Supported core modules:
 
@@ -106,14 +106,6 @@ Supported core modules:
 - [Model card template](docs/model_card_template.md)
 - [Data statement template](docs/data_statement_template.md)
 - [Citation metadata](CITATION.cff)
-
-## Roadmap
-
-- Add benchmark fixtures using public African language datasets.
-- Add optional sentence-transformer routing backends.
-- Add dialect-sensitive Yoruba and Nigerian Pidgin examples.
-- Add model cards and data statements for responsible release practices.
-- Add Hugging Face dataset/model integration examples without committing large artefacts.
 
 ## Responsible AI Notes
 

@@ -26,4 +26,4 @@ This page records genuine external use signals. It should stay modest and verifi
 
 ## Adoption Log
 
-No external adoption has been claimed yet.
+No external adoption claimed.

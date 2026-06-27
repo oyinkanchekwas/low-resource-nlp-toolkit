@@ -24,4 +24,4 @@ The checks run a repository quality gate and the full unit test suite.
 
 ## Release Direction
 
-The first public release is intended to be useful as a dependency-light research package. Benchmark fixtures, Hugging Face examples, and optional model backends should be added only when their provenance and limitations can be documented properly.
+The first public release is a dependency-light research package. Benchmark fixtures, Hugging Face examples, and optional model backends are outside the current release until their provenance and limitations are documented properly.
