@@ -100,7 +100,7 @@ print(emotion)
 
 ## Current Scope
 
-The first public release deliberately avoids bundling private datasets or model weights. The core is deterministic, inspectable, and dependency-light. Optional embedding and transformer backends are outside the current core package.
+The public package deliberately avoids bundling private datasets or model weights. The core is deterministic, inspectable, and dependency-light. Optional embedding and transformer backends are outside the current core package.
 
 Supported core modules:
 
@@ -117,6 +117,7 @@ Supported core modules:
 - [Contributing guide](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CONTRIBUTING.md)
 - [Documentation index](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/index.md)
 - [Novelty review](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/novelty_review.md)
+- [0.2.0 release record](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_plan_v0_2.md)
 - [0.1.0 release plan](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_plan_v0_1.md)
 - [Adoption notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/adoption.md)
 - [Model card template](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/model_card_template.md)

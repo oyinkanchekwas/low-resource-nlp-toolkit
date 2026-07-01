@@ -40,3 +40,8 @@ The package remains dependency-light by design. Benchmark fixtures, Hugging Face
 ## Positioning
 
 The project does not claim to beat high-coverage African language identification models. Its current value is a transparent audit layer for low-resource text preparation. See [Novelty Review](novelty_review.md).
+
+## Release Records
+
+- [Version 0.2.0 Release Record](release_plan_v0_2.md)
+- [Version 0.1.0 Release Record](release_plan_v0_1.md)
