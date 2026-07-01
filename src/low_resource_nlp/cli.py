@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import List
 
 from ._version import __version__
+from .audit import audit_code_switching
 from .datasets import iter_text_records
 from .evaluation import classification_report
 from .labels import label_to_valence_arousal
@@ -31,6 +32,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     route = subcommands.add_parser("route", help="Route a text string to a language profile.")
     route.add_argument("text")
+
+    audit = subcommands.add_parser("audit", help="Audit language evidence across a text string.")
+    audit.add_argument("text")
+    audit.add_argument("--min-confidence", type=float, default=0.55)
+    audit.add_argument("--min-score-margin", type=float, default=0.75)
 
     label = subcommands.add_parser("label", help="Map an emotion label to the canonical taxonomy.")
     label.add_argument("label")
@@ -64,6 +70,15 @@ def main(argv: List[str] | None = None) -> int:
                 "signals": decision.signals,
             }
         )
+        return 0
+
+    if args.command == "audit":
+        report = audit_code_switching(
+            args.text,
+            min_confidence=args.min_confidence,
+            min_score_margin=args.min_score_margin,
+        )
+        _print_json(report.to_dict())
         return 0
 
     if args.command == "label":

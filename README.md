@@ -4,7 +4,7 @@ A public, research-facing Python toolkit for African language pre-processing, em
 
 The project is designed as a safe open-source wrapper around the kinds of NLP engineering problems that appear in low-resource and multilingual AI research: noisy text, code-switching, uneven label taxonomies, small datasets, and evaluation that must be transparent.
 
-Status: `0.1.0` seed release from source. Local checks, CI, isolated wheel builds, metadata checks, and install tests pass.
+Status: `0.2.0` release. Local checks, CI, isolated wheel builds, metadata checks, and install tests pass.
 
 ## Why This Exists
 
@@ -12,6 +12,7 @@ Low-resource NLP projects often spend too much time rebuilding the same foundati
 
 - Text normalisation for noisy social, conversational, and cultural text.
 - Lightweight African language routing for Yoruba, Igbo, Hausa, Nigerian Pidgin, Swahili, and English.
+- Evidence-first code-switch audits that expose token routes, spans, and abstentions.
 - Emotion label harmonisation across categorical and valence-arousal formats.
 - Evaluation utilities for classification and routing experiments.
 - A CLI and examples that run without downloading model weights.
@@ -36,7 +37,7 @@ flowchart LR
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e .
+python -m pip install low-resource-nlp-toolkit
 low-resource-nlp --version
 ```
 
@@ -44,6 +45,12 @@ Route a text sample:
 
 ```bash
 low-resource-nlp route "abeg make una help me check this model output"
+```
+
+Audit code-switched language evidence:
+
+```bash
+low-resource-nlp audit "abeg make una check this model output"
 ```
 
 Normalise text:
@@ -74,13 +81,20 @@ PYTHONPATH=src python3 -m unittest discover -s tests
 ## Python Usage
 
 ```python
-from low_resource_nlp import LexicalLanguageRouter, normalise_text, label_to_valence_arousal
+from low_resource_nlp import (
+    LexicalLanguageRouter,
+    audit_code_switching,
+    label_to_valence_arousal,
+    normalise_text,
+)
 
 text = normalise_text("Ẹ káàrọ̀, báwo ni?")
 decision = LexicalLanguageRouter.default().route(text)
+audit = audit_code_switching("abeg make una check this model output")
 emotion = label_to_valence_arousal("joy")
 
 print(decision.language_code, decision.confidence)
+print(audit.language_mix, audit.warnings)
 print(emotion)
 ```
 
@@ -92,6 +106,7 @@ Supported core modules:
 
 - `normalisation`: Unicode-aware text cleaning, URL/user normalisation, tokenisation, repeated-character handling.
 - `routing`: script-aware and lexicon-assisted language routing.
+- `audit`: token-level code-switch audits with spans, evidence, and abstention warnings.
 - `labels`: canonical emotion labels and valence-arousal mapping.
 - `evaluation`: precision, recall, F1, macro/micro summaries, and confusion matrices.
 - `datasets`: simple CSV/JSONL readers for experiment scaffolding.
@@ -101,6 +116,7 @@ Supported core modules:
 - [Changelog](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CHANGELOG.md)
 - [Contributing guide](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CONTRIBUTING.md)
 - [Documentation index](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/index.md)
+- [Novelty review](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/novelty_review.md)
 - [0.1.0 release plan](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_plan_v0_1.md)
 - [Adoption notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/adoption.md)
 - [Model card template](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/model_card_template.md)
