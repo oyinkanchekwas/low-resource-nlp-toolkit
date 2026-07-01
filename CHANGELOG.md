@@ -2,7 +2,7 @@
 
 All notable changes to this project are recorded here. The format is deliberately plain so release decisions remain easy to audit.
 
-## 0.1.0 - Unreleased
+## 0.1.0 - 2026-07-01
 
 ### Added
 
