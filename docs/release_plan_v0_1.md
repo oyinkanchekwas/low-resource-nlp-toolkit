@@ -26,6 +26,8 @@ The 0.1.0 release establishes the toolkit as a small public research package. A 
 - Fresh wheel install and CLI smoke tests passed.
 - `v0.1.0` was tagged and published as a GitHub release.
 - The release includes the source distribution and wheel.
+- TestPyPI trusted publishing succeeded for `0.1.0`.
+- A fresh install from TestPyPI passed, including CLI and import smoke tests.
 
 ## Package Index Publishing
 
@@ -40,12 +42,18 @@ Trusted publisher settings:
 - TestPyPI environment: `testpypi`
 - PyPI environment: `pypi`
 
-After the pending publishers are configured on TestPyPI and PyPI, run the `publish` workflow manually with `target=testpypi`, test installation from TestPyPI, and then run it with `target=pypi`.
+Current state:
+
+- TestPyPI is published: `https://test.pypi.org/project/low-resource-nlp-toolkit/0.1.0/`
+- PyPI is not published yet.
+
+After the PyPI pending publisher is configured, run the `publish` workflow manually with `target=pypi`.
 
 ## Evidence to Preserve
 
 - CI run link.
 - GitHub release link.
+- TestPyPI release link.
 - Package index release link once PyPI publication is complete.
 - Documentation link.
 - External issue, pull request, citation, workshop/demo acceptance, or adoption note.
