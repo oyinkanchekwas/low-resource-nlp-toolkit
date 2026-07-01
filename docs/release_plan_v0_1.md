@@ -1,8 +1,8 @@
-# Version 0.1.0 Release Plan
+# Version 0.1.0 Release Record
 
-The 0.1.0 release should establish the toolkit as a trustworthy public artefact, not a large package. The release is ready only when a new user can install it, run examples, understand the limitations, and decide whether it is suitable for their own research.
+The 0.1.0 release establishes the toolkit as a small public research package. A new user can inspect the source, install the wheel from the GitHub release, run examples, and read the stated limitations.
 
-## Release Goals
+## Release Contents
 
 - Source install works on Python 3.9, 3.10, and 3.11.
 - Tests and quality gate pass in CI.
@@ -17,20 +17,35 @@ The 0.1.0 release should establish the toolkit as a trustworthy public artefact,
 - API-backed demos that require secrets.
 - Claims that the router identifies a speaker, ethnicity, nationality, or community membership.
 
-## Release Checklist
+## Completed Checks
 
-- [ ] Confirm `make check` passes locally.
-- [ ] Confirm GitHub Actions passes on `main`.
-- [ ] Build source distribution and wheel with `python3 -m build`.
-- [ ] Review package metadata and long description.
-- [ ] Tag the release as `v0.1.0`.
-- [ ] Publish to PyPI after checking the package on TestPyPI.
-- [ ] Add a short release note explaining why the first release stays dependency-light.
+- `make check` passed locally.
+- GitHub Actions passed on `main`.
+- Isolated source and wheel builds passed.
+- `twine check` passed.
+- Fresh wheel install and CLI smoke tests passed.
+- `v0.1.0` was tagged and published as a GitHub release.
+- The release includes the source distribution and wheel.
+
+## Package Index Publishing
+
+The package-index publishing path uses trusted publishing rather than long-lived API tokens. The repository workflow is `.github/workflows/publish.yml`.
+
+Trusted publisher settings:
+
+- Project name: `low-resource-nlp-toolkit`
+- Owner: `oyinkanchekwas`
+- Repository: `low-resource-nlp-toolkit`
+- Workflow: `publish.yml`
+- TestPyPI environment: `testpypi`
+- PyPI environment: `pypi`
+
+After the pending publishers are configured on TestPyPI and PyPI, run the `publish` workflow manually with `target=testpypi`, test installation from TestPyPI, and then run it with `target=pypi`.
 
 ## Evidence to Preserve
 
 - CI run link.
-- PyPI release link.
+- GitHub release link.
+- Package index release link once PyPI publication is complete.
 - Documentation link.
-- Demo video or notebook link.
 - External issue, pull request, citation, workshop/demo acceptance, or adoption note.
