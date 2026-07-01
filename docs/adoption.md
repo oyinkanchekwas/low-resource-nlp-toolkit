@@ -15,7 +15,7 @@ This page records genuine external use signals. It should stay modest and verifi
 - Automated commit activity.
 - Self-generated stars, forks, or issues.
 - Private claims that cannot be evidenced.
-- Unchecked AI-generated changes added only to increase repository activity.
+- Automated, unchecked changes added only to increase repository activity.
 
 ## Candidate Outreach
 

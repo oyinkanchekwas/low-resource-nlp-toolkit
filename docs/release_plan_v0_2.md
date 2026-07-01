@@ -44,6 +44,6 @@ The 0.2.0 release makes the toolkit more distinctive and more useful by adding a
 - TestPyPI publish run: `28539500134`
 - PyPI publish run: `28539670508`
 
-## Interview Summary
+## Release Summary
 
 The release turns the project from a generic low-resource NLP helper into a more defensible research tool: an installable package that can audit code-switched text, show the evidence behind language-routing decisions, and abstain when token-level signals are weak.
