@@ -1,6 +1,6 @@
 # Novelty Review
 
-This note records the project's current novelty claim and its limits. It is deliberately conservative: a useful public tool is stronger than an inflated claim.
+This note records the project's current novelty claim and its limits.
 
 ## Honest Assessment
 
@@ -28,23 +28,11 @@ The `audit` module adds that layer:
 - JSON output from both Python and the CLI;
 - no model download, API call, or private dataset dependency.
 
-## Safe Novelty Claim
+## Novelty Claim
 
 A safe way to describe the project is:
 
 > This is a dependency-light research toolkit for inspecting low-resource African-language text before heavier modelling. Its distinctive contribution is an evidence-first code-switch audit that exposes token-level routing evidence, abstains on weak signals, and produces structured reports for corpus triage.
-
-That claim is narrower than "state of the art African language identification", but it is more accurate and more useful.
-
-## Claims to Avoid
-
-Avoid claiming that the toolkit:
-
-- outperforms AfroLID, AfroScope, or other trained language identification systems;
-- covers African languages broadly;
-- identifies a speaker's identity, ethnicity, nationality, or language community;
-- provides gold-standard emotion or sentiment labels;
-- replaces native-speaker review or task-specific evaluation.
 
 ## References for Positioning
 
