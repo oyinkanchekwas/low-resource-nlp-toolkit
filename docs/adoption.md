@@ -14,10 +14,10 @@ This page records genuine external use signals. It should stay modest and verifi
 
 - Automated commit activity.
 - Self-generated stars, forks, or issues.
-- Private claims that cannot be evidenced.
+- Private references that cannot be checked publicly.
 - Automated, unchecked changes added only to increase repository activity.
 
-## Candidate Outreach
+## Communities to Share With
 
 - Masakhane and AfricaNLP community channels.
 - University NLP or responsible AI reading groups.
@@ -26,4 +26,4 @@ This page records genuine external use signals. It should stay modest and verifi
 
 ## Adoption Log
 
-No external adoption claimed.
+No external use logged yet.

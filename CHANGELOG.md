@@ -8,7 +8,7 @@ All notable changes to this project are recorded here. The format is deliberatel
 
 - Code-switch audit reports for short multilingual text, including token routes, character offsets, accepted spans, language-mix counts, and warnings.
 - `low-resource-nlp audit` CLI command for evidence-first corpus triage.
-- Documentation that positions the toolkit against existing African NLP and language-identification work without claiming broad model novelty.
+- Technical scope notes that explain where the toolkit fits alongside broader African NLP and language-identification work.
 
 ### Design Notes
 

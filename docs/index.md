@@ -33,13 +33,13 @@ make check
 
 The checks run a repository quality gate and the full unit test suite.
 
-## Release Direction
+## Development Notes
 
 The package remains dependency-light by design. Benchmark fixtures, Hugging Face examples, and optional model backends belong in future releases only when their provenance and limitations are documented properly.
 
-## Positioning
+## How It Fits
 
-The project does not claim to beat high-coverage African language identification models. Its current value is a transparent audit layer for low-resource text preparation. See [Novelty Review](novelty_review.md).
+The project is a preparation and audit layer for low-resource text work. For broad language identification, it should sit alongside task-specific evaluation and stronger model-based systems. See [Technical Scope](scope.md).
 
 ## Release Records
 

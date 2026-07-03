@@ -1,6 +1,6 @@
 # Version 0.2.0 Release Record
 
-The 0.2.0 release makes the toolkit more distinctive and more useful by adding an evidence-first code-switch audit. The release does not try to compete with broad model-based African language identification systems. It gives researchers a lightweight way to inspect short, noisy, mixed-language text before choosing heavier models or publishing a dataset.
+The 0.2.0 release adds an evidence-first code-switch audit. It gives researchers a lightweight way to inspect short, noisy, mixed-language text before choosing heavier models or publishing a dataset.
 
 ## Release Contents
 
@@ -10,7 +10,7 @@ The 0.2.0 release makes the toolkit more distinctive and more useful by adding a
 - Accepted language spans for mixed text.
 - Language-mix counts and code-switch ratio.
 - Warnings for weak evidence, ambiguity, low supported-language coverage, and high code-switching.
-- Novelty review that positions the package against existing African NLP and language-identification work.
+- Scope notes that explain where the package fits alongside broader African NLP and language-identification work.
 
 ## Not in Scope
 
@@ -46,4 +46,4 @@ The 0.2.0 release makes the toolkit more distinctive and more useful by adding a
 
 ## Release Summary
 
-The release turns the project from a generic low-resource NLP helper into a more defensible research tool: an installable package that can audit code-switched text, show the evidence behind language-routing decisions, and abstain when token-level signals are weak.
+The release turns the project from a small low-resource NLP helper into an installable package that can audit code-switched text, show the evidence behind language-routing decisions, and abstain when token-level signals are weak.

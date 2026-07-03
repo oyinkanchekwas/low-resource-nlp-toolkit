@@ -1,4 +1,4 @@
-# Scope Notes
+# Technical Scope
 
 ## Reliable Core
 
@@ -13,7 +13,7 @@
 - No private datasets are bundled.
 - No model weights are committed.
 - No API-backed demos require credentials.
-- No claim is made that routing identifies a person's language community.
+- Routing output should not be treated as a person's language community.
 
 ## Expansion Criteria
 
