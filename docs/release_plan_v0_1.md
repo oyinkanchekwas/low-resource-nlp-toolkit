@@ -44,12 +44,12 @@ Trusted publisher settings:
 - TestPyPI environment: `testpypi`
 - PyPI environment: `pypi`
 
-Current state:
+Published links:
 
 - TestPyPI is published: `https://test.pypi.org/project/low-resource-nlp-toolkit/0.1.0/`
 - PyPI is published: `https://pypi.org/project/low-resource-nlp-toolkit/0.1.0/`
 
-## Evidence to Preserve
+## Release Evidence
 
 - CI run link.
 - GitHub release link.

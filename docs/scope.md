@@ -15,7 +15,7 @@
 - No API-backed demos require credentials.
 - Routing output should not be treated as a person's language community.
 
-## Expansion Criteria
+## Adding Modules
 
-New benchmarks, model backends, or research workflows belong in the project only when the data
-source, licence, evaluation method, and limitations can be documented clearly.
+New benchmarks, model backends, or research workflows need clear notes on data source, licence,
+evaluation method, and limitations.

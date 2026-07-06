@@ -34,7 +34,7 @@ The 0.2.0 release adds an evidence-first code-switch audit. It gives researchers
 - PyPI trusted publishing succeeded for `0.2.0`.
 - A fresh install from PyPI passed, including CLI and import smoke tests.
 
-## Evidence to Preserve
+## Release Evidence
 
 - Commit: `f9ce7f91d95abddc39676bffe9032fb53f016936`
 - GitHub release: `https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/releases/tag/v0.2.0`

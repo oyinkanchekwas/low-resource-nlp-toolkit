@@ -1,29 +1,14 @@
-# Adoption Notes
+# Use Log
 
-This page records genuine external use signals. It should stay modest and verifiable.
+This page records public uses and references to the toolkit.
 
-## What Counts
+## Entries
 
-- A public project using the package or examples.
-- A community tutorial, invited demo, or teaching session.
-- A workshop demo, preprint citation, or benchmark comparison.
-- A GitHub issue or pull request from an external technical user.
-- Hugging Face, PyPI, or documentation usage statistics once public releases exist.
+No public entries have been logged yet.
 
-## What Does Not Count
+## Entry Format
 
-- Automated commit activity.
-- Self-generated stars, forks, or issues.
-- Private references that cannot be checked publicly.
-- Automated, unchecked changes added only to increase repository activity.
-
-## Communities to Share With
-
-- Masakhane and AfricaNLP community channels.
-- University NLP or responsible AI reading groups.
-- Open-source maintainers working on African language datasets.
-- Researchers who need lightweight examples for teaching low-resource NLP evaluation.
-
-## Adoption Log
-
-No external use logged yet.
+- Date.
+- Project, event, citation, tutorial, or issue.
+- Public link.
+- Short note on how the toolkit was used.

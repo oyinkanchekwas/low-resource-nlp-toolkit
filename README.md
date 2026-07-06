@@ -118,8 +118,8 @@ Supported core modules:
 - [Documentation index](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/index.md)
 - [Technical scope](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/scope.md)
 - [0.2.0 release record](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_plan_v0_2.md)
-- [0.1.0 release plan](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_plan_v0_1.md)
-- [Adoption notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/adoption.md)
+- [0.1.0 release record](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_plan_v0_1.md)
+- [Use log](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/adoption.md)
 - [Model card template](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/model_card_template.md)
 - [Data statement template](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/data_statement_template.md)
 - [Citation metadata](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CITATION.cff)
@@ -127,7 +127,3 @@ Supported core modules:
 ## Responsible AI Notes
 
 This toolkit is for research and prototyping. Language, dialect, and emotion labels are socially and culturally sensitive. Do not treat routing or emotion predictions as identity labels, clinical assessments, or ground truth. Always evaluate with speakers, domain experts, and context-specific data.
-
-## External Use
-
-External use signals should be public and verifiable: issues from real users, pull requests, tutorial use, workshop demos, citations, package downloads, or adoption by a lab/community project. Self-generated activity should not be counted as impact.

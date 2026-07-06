@@ -2,7 +2,7 @@
 
 This project is early-stage, but the contribution bar is intentionally practical: changes should make low-resource NLP work easier to inspect, reproduce, or document.
 
-## Useful Contributions
+## Contribution Areas
 
 - Small routing or normalisation fixtures for public, well-described text examples.
 - Tests that expose dialect, code-switching, or annotation edge cases.
@@ -35,4 +35,4 @@ Language and dialect support should not be presented as identity detection. When
 
 ## Review Standard
 
-I prefer small pull requests with clear reasoning. The most useful explanation is usually why a design choice improves reliability, transparency, or responsible use.
+Small pull requests with clear reasoning are easiest to review. The most useful explanation is usually why a design choice improves reliability, transparency, or responsible use.

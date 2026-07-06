@@ -33,13 +33,13 @@ make check
 
 The checks run a repository quality gate and the full unit test suite.
 
-## Development Notes
+## Package Boundary
 
-The package remains dependency-light by design. Benchmark fixtures, Hugging Face examples, and optional model backends belong in future releases only when their provenance and limitations are documented properly.
+The package remains dependency-light by design. It does not bundle benchmark datasets, model weights, or API-backed demos.
 
 ## How It Fits
 
-The project is a preparation and audit layer for low-resource text work. For broad language identification, it should sit alongside task-specific evaluation and stronger model-based systems. See [Technical Scope](scope.md).
+The project is a preparation and audit layer for low-resource text work. For broad language identification, use it alongside task-specific evaluation and stronger model-based systems. See [Technical Scope](scope.md).
 
 ## Release Records
 

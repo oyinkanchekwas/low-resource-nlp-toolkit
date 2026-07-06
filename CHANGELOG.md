@@ -12,7 +12,7 @@ All notable changes to this project are recorded here. The format is deliberatel
 
 ### Design Notes
 
-- The audit layer is meant to complement high-coverage model-based language identification. It favours inspectable evidence and abstention on weak token routes.
+- The audit layer complements high-coverage model-based language identification. It favours inspectable evidence and abstention on weak token routes.
 - The package remains dependency-light so the audit can run in constrained research and teaching environments.
 
 ## 0.1.0 - 2026-07-01
