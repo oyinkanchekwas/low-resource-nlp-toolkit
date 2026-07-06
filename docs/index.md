@@ -41,7 +41,7 @@ The package remains dependency-light by design. It does not bundle benchmark dat
 
 The project is a preparation and audit layer for low-resource text work. For broad language identification, use it alongside task-specific evaluation and stronger model-based systems. See [Technical Scope](scope.md).
 
-## Release Records
+## Release Notes
 
-- [Version 0.2.0 Release Record](release_plan_v0_2.md)
-- [Version 0.1.0 Release Record](release_plan_v0_1.md)
+- [Version 0.2.0 Release Notes](release_notes_v0_2.md)
+- [Version 0.1.0 Release Notes](release_notes_v0_1.md)

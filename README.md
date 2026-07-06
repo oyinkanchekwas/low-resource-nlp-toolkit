@@ -4,7 +4,7 @@ A public, research-facing Python toolkit for African language pre-processing, em
 
 The project collects the practical NLP utilities that low-resource and multilingual experiments often need before modelling starts: noisy text cleanup, code-switching checks, uneven label taxonomies, small datasets, and evaluation that remains easy to inspect.
 
-Status: `0.2.0` release. Local checks, CI, isolated wheel builds, metadata checks, and install tests pass.
+Status: current public release `0.2.0`.
 
 ## Why This Exists
 
@@ -117,8 +117,8 @@ Supported core modules:
 - [Contributing guide](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CONTRIBUTING.md)
 - [Documentation index](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/index.md)
 - [Technical scope](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/scope.md)
-- [0.2.0 release record](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_plan_v0_2.md)
-- [0.1.0 release record](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_plan_v0_1.md)
+- [0.2.0 release notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_notes_v0_2.md)
+- [0.1.0 release notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_notes_v0_1.md)
 - [Use log](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/adoption.md)
 - [Model card template](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/model_card_template.md)
 - [Data statement template](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/data_statement_template.md)
