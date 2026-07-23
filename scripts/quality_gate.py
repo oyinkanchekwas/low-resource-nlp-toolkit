@@ -58,6 +58,7 @@ SECRET_PATTERNS = {
 }
 
 ALLOWED_LINE_SNIPPETS = {
+    "actions/upload-pages-artifact@",
     "unicodedata.normalize",
 }
 

@@ -113,9 +113,9 @@ Supported core modules:
 
 ## Public Project Materials
 
+- [Documentation](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/)
 - [Changelog](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CHANGELOG.md)
 - [Contributing guide](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CONTRIBUTING.md)
-- [Documentation index](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/index.md)
 - [Technical scope](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/scope.md)
 - [0.2.0 release notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_notes_v0_2.md)
 - [0.1.0 release notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_notes_v0_1.md)
