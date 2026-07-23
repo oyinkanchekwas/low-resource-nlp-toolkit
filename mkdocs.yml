@@ -3,6 +3,7 @@ site_description: Research-facing utilities for low-resource African language NL
 site_url: https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/
 repo_url: https://github.com/oyinkanchekwas/low-resource-nlp-toolkit
 repo_name: oyinkanchekwas/low-resource-nlp-toolkit
+edit_uri: edit/main/docs/
 theme:
   name: mkdocs
 nav:
