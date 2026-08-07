@@ -43,5 +43,6 @@ The project is a preparation and audit layer for low-resource text work. For bro
 
 ## Release Notes
 
+- [Version 0.2.1 Release Notes](release_notes_v0_2_1.md)
 - [Version 0.2.0 Release Notes](release_notes_v0_2.md)
 - [Version 0.1.0 Release Notes](release_notes_v0_1.md)

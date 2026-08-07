@@ -2,6 +2,14 @@
 
 All notable changes to this project are recorded here. The format is deliberately plain so release decisions remain easy to audit.
 
+## 0.2.1 - 2026-08-07
+
+### Changed
+
+- Updated the package description shown on PyPI to match the current project scope.
+- Corrected the software version in `CITATION.cff`.
+- Aligned the README, documentation and package metadata on version `0.2.1`.
+
 ## 0.2.0 - 2026-07-01
 
 ### Added

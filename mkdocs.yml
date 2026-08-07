@@ -10,6 +10,7 @@ nav:
   - Home: index.md
   - Technical Scope: scope.md
   - Release Notes:
+      - Version 0.2.1: release_notes_v0_2_1.md
       - Version 0.2.0: release_notes_v0_2.md
       - Version 0.1.0: release_notes_v0_1.md
   - Use Log: adoption.md
