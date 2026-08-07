@@ -112,6 +112,7 @@ Language and emotion predictions must not be treated as identity labels, clinica
 ## Links
 
 - [Documentation](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/)
+- [Corpus triage tutorial](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/tutorial/)
 - [Benchmark report](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/benchmark/)
 - [Changelog](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CHANGELOG.md)
 - [Contributing guide](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CONTRIBUTING.md)

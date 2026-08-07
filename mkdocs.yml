@@ -8,6 +8,7 @@ theme:
   name: mkdocs
 nav:
   - Home: index.md
+  - Corpus Tutorial: tutorial.md
   - AfriSenti Benchmark: benchmark.md
   - Technical Scope: scope.md
   - Release Notes:
