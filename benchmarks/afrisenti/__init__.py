@@ -1,0 +1,1 @@
+"""AfriSenti routing benchmark."""

@@ -1,0 +1,625 @@
+{
+  "schema_version": 1,
+  "toolkit_version": "0.3.0",
+  "dataset": {
+    "name": "AfriSenti-SemEval 2023 Subtask A",
+    "repository": "https://github.com/afrisenti-semeval/afrisent-semeval-2023",
+    "revision": "5aec3cfcf87b59f885e98641f72e52182776429d",
+    "licence": "CC BY 4.0",
+    "paper": "https://aclanthology.org/2023.semeval-1.315/"
+  },
+  "task": "corpus-language routing",
+  "languages": [
+    "hau",
+    "ibo",
+    "pcm",
+    "swa",
+    "yor"
+  ],
+  "development": {
+    "baseline": {
+      "accuracy": 0.7789,
+      "macro_f1": 0.7953,
+      "weighted_f1": 0.8247,
+      "labels": {
+        "hau": {
+          "precision": 0.9322,
+          "recall": 0.7288,
+          "f1": 0.818,
+          "support": 2677
+        },
+        "ibo": {
+          "precision": 0.9527,
+          "recall": 0.6888,
+          "f1": 0.7995,
+          "support": 1841
+        },
+        "pcm": {
+          "precision": 0.76,
+          "recall": 0.6971,
+          "f1": 0.7272,
+          "support": 1281
+        },
+        "swa": {
+          "precision": 0.5822,
+          "recall": 0.8366,
+          "f1": 0.6866,
+          "support": 453
+        },
+        "yor": {
+          "precision": 0.9305,
+          "recall": 0.9603,
+          "f1": 0.9451,
+          "support": 2090
+        }
+      },
+      "confusion_matrix": {
+        "hau": {
+          "hau": 1951,
+          "ibo": 46,
+          "pcm": 180,
+          "swa": 216,
+          "yor": 42,
+          "eng": 172,
+          "und": 70
+        },
+        "ibo": {
+          "hau": 106,
+          "ibo": 1268,
+          "pcm": 90,
+          "swa": 40,
+          "yor": 63,
+          "eng": 231,
+          "und": 43
+        },
+        "pcm": {
+          "hau": 5,
+          "ibo": 3,
+          "pcm": 893,
+          "swa": 3,
+          "yor": 43,
+          "eng": 334
+        },
+        "swa": {
+          "hau": 20,
+          "ibo": 5,
+          "pcm": 8,
+          "swa": 379,
+          "yor": 2,
+          "eng": 39
+        },
+        "yor": {
+          "hau": 11,
+          "ibo": 9,
+          "pcm": 4,
+          "swa": 13,
+          "yor": 2007,
+          "eng": 46
+        }
+      },
+      "total": 8342,
+      "accuracy_ci95": [
+        0.7699,
+        0.7877
+      ]
+    },
+    "selection_target_accuracy": 0.9,
+    "selected_policy": {
+      "total": 8342,
+      "accepted": 6274,
+      "abstained": 2068,
+      "coverage": 0.7521,
+      "selective_accuracy": 0.905,
+      "selective_risk": 0.095,
+      "overall_accuracy": 0.6807,
+      "accepted_macro_f1": 0.9206,
+      "accepted_weighted_f1": 0.9259,
+      "labels": {
+        "hau": {
+          "support": 2677,
+          "accepted": 1730,
+          "coverage": 0.6462,
+          "selective_accuracy": 0.8948
+        },
+        "ibo": {
+          "support": 1841,
+          "accepted": 1280,
+          "coverage": 0.6953,
+          "selective_accuracy": 0.8578
+        },
+        "pcm": {
+          "support": 1281,
+          "accepted": 954,
+          "coverage": 0.7447,
+          "selective_accuracy": 0.7841
+        },
+        "swa": {
+          "support": 453,
+          "accepted": 330,
+          "coverage": 0.7285,
+          "selective_accuracy": 0.9818
+        },
+        "yor": {
+          "support": 2090,
+          "accepted": 1980,
+          "coverage": 0.9474,
+          "selective_accuracy": 0.9899
+        }
+      },
+      "confusion_matrix": {
+        "hau": {
+          "hau": 1548,
+          "ibo": 28,
+          "pcm": 53,
+          "swa": 9,
+          "yor": 30,
+          "eng": 62
+        },
+        "ibo": {
+          "hau": 25,
+          "ibo": 1098,
+          "pcm": 60,
+          "swa": 6,
+          "yor": 44,
+          "eng": 47
+        },
+        "pcm": {
+          "hau": 1,
+          "ibo": 1,
+          "pcm": 748,
+          "swa": 0,
+          "yor": 28,
+          "eng": 176
+        },
+        "swa": {
+          "hau": 0,
+          "ibo": 1,
+          "pcm": 0,
+          "swa": 324,
+          "yor": 2,
+          "eng": 3
+        },
+        "yor": {
+          "hau": 1,
+          "ibo": 3,
+          "pcm": 2,
+          "swa": 4,
+          "yor": 1960,
+          "eng": 10
+        }
+      },
+      "min_confidence": 0.0,
+      "min_score_margin": 0.75,
+      "coverage_ci95": [
+        0.7427,
+        0.7612
+      ],
+      "selective_accuracy_ci95": [
+        0.8975,
+        0.912
+      ]
+    }
+  },
+  "test": {
+    "baseline": {
+      "accuracy": 0.7475,
+      "macro_f1": 0.7956,
+      "weighted_f1": 0.8118,
+      "labels": {
+        "hau": {
+          "precision": 0.9193,
+          "recall": 0.6419,
+          "f1": 0.7559,
+          "support": 5303
+        },
+        "ibo": {
+          "precision": 0.9559,
+          "recall": 0.6589,
+          "f1": 0.7801,
+          "support": 3682
+        },
+        "pcm": {
+          "precision": 0.8829,
+          "recall": 0.7169,
+          "f1": 0.7913,
+          "support": 4154
+        },
+        "swa": {
+          "precision": 0.6255,
+          "recall": 0.8262,
+          "f1": 0.712,
+          "support": 748
+        },
+        "yor": {
+          "precision": 0.9195,
+          "recall": 0.959,
+          "f1": 0.9389,
+          "support": 4515
+        }
+      },
+      "confusion_matrix": {
+        "hau": {
+          "hau": 3404,
+          "ibo": 60,
+          "pcm": 190,
+          "swa": 252,
+          "yor": 67,
+          "eng": 1326,
+          "und": 4
+        },
+        "ibo": {
+          "hau": 208,
+          "ibo": 2426,
+          "pcm": 186,
+          "swa": 72,
+          "yor": 136,
+          "eng": 651,
+          "und": 3
+        },
+        "pcm": {
+          "hau": 45,
+          "ibo": 24,
+          "pcm": 2978,
+          "swa": 8,
+          "yor": 173,
+          "eng": 925,
+          "und": 1
+        },
+        "swa": {
+          "hau": 34,
+          "ibo": 7,
+          "pcm": 11,
+          "swa": 618,
+          "yor": 3,
+          "eng": 75
+        },
+        "yor": {
+          "hau": 12,
+          "ibo": 21,
+          "pcm": 8,
+          "swa": 38,
+          "yor": 4330,
+          "eng": 105,
+          "und": 1
+        }
+      },
+      "total": 18402,
+      "accuracy_ci95": [
+        0.7412,
+        0.7538
+      ]
+    },
+    "selected_policy": {
+      "total": 18402,
+      "accepted": 13623,
+      "abstained": 4779,
+      "coverage": 0.7403,
+      "selective_accuracy": 0.8965,
+      "selective_risk": 0.1035,
+      "overall_accuracy": 0.6637,
+      "accepted_macro_f1": 0.9184,
+      "accepted_weighted_f1": 0.9199,
+      "labels": {
+        "hau": {
+          "support": 5303,
+          "accepted": 3202,
+          "coverage": 0.6038,
+          "selective_accuracy": 0.8882
+        },
+        "ibo": {
+          "support": 3682,
+          "accepted": 2474,
+          "coverage": 0.6719,
+          "selective_accuracy": 0.8371
+        },
+        "pcm": {
+          "support": 4154,
+          "accepted": 3090,
+          "coverage": 0.7439,
+          "selective_accuracy": 0.8087
+        },
+        "swa": {
+          "support": 748,
+          "accepted": 538,
+          "coverage": 0.7193,
+          "selective_accuracy": 0.9721
+        },
+        "yor": {
+          "support": 4515,
+          "accepted": 4319,
+          "coverage": 0.9566,
+          "selective_accuracy": 0.99
+        }
+      },
+      "confusion_matrix": {
+        "hau": {
+          "hau": 2844,
+          "ibo": 38,
+          "pcm": 113,
+          "swa": 27,
+          "yor": 45,
+          "eng": 135
+        },
+        "ibo": {
+          "hau": 50,
+          "ibo": 2071,
+          "pcm": 124,
+          "swa": 18,
+          "yor": 103,
+          "eng": 108
+        },
+        "pcm": {
+          "hau": 4,
+          "ibo": 6,
+          "pcm": 2499,
+          "swa": 2,
+          "yor": 120,
+          "eng": 459
+        },
+        "swa": {
+          "hau": 3,
+          "ibo": 2,
+          "pcm": 2,
+          "swa": 523,
+          "yor": 1,
+          "eng": 7
+        },
+        "yor": {
+          "hau": 5,
+          "ibo": 3,
+          "pcm": 3,
+          "swa": 8,
+          "yor": 4276,
+          "eng": 24
+        }
+      },
+      "min_confidence": 0.0,
+      "min_score_margin": 0.75,
+      "coverage_ci95": [
+        0.7339,
+        0.7466
+      ],
+      "selective_accuracy_ci95": [
+        0.8913,
+        0.9015
+      ]
+    },
+    "orthography_stress": {
+      "original_accuracy": 0.7475,
+      "stripped_accuracy": 0.6987,
+      "accuracy_difference": -0.0488,
+      "accuracy_difference_ci95": [
+        -0.052,
+        -0.0456
+      ],
+      "route_flip_rate": 0.0552,
+      "original_policy": {
+        "total": 18402,
+        "accepted": 13623,
+        "abstained": 4779,
+        "coverage": 0.7403,
+        "selective_accuracy": 0.8965,
+        "selective_risk": 0.1035,
+        "overall_accuracy": 0.6637,
+        "accepted_macro_f1": 0.9184,
+        "accepted_weighted_f1": 0.9199,
+        "labels": {
+          "hau": {
+            "support": 5303,
+            "accepted": 3202,
+            "coverage": 0.6038,
+            "selective_accuracy": 0.8882
+          },
+          "ibo": {
+            "support": 3682,
+            "accepted": 2474,
+            "coverage": 0.6719,
+            "selective_accuracy": 0.8371
+          },
+          "pcm": {
+            "support": 4154,
+            "accepted": 3090,
+            "coverage": 0.7439,
+            "selective_accuracy": 0.8087
+          },
+          "swa": {
+            "support": 748,
+            "accepted": 538,
+            "coverage": 0.7193,
+            "selective_accuracy": 0.9721
+          },
+          "yor": {
+            "support": 4515,
+            "accepted": 4319,
+            "coverage": 0.9566,
+            "selective_accuracy": 0.99
+          }
+        },
+        "confusion_matrix": {
+          "hau": {
+            "hau": 2844,
+            "ibo": 38,
+            "pcm": 113,
+            "swa": 27,
+            "yor": 45,
+            "eng": 135
+          },
+          "ibo": {
+            "hau": 50,
+            "ibo": 2071,
+            "pcm": 124,
+            "swa": 18,
+            "yor": 103,
+            "eng": 108
+          },
+          "pcm": {
+            "hau": 4,
+            "ibo": 6,
+            "pcm": 2499,
+            "swa": 2,
+            "yor": 120,
+            "eng": 459
+          },
+          "swa": {
+            "hau": 3,
+            "ibo": 2,
+            "pcm": 2,
+            "swa": 523,
+            "yor": 1,
+            "eng": 7
+          },
+          "yor": {
+            "hau": 5,
+            "ibo": 3,
+            "pcm": 3,
+            "swa": 8,
+            "yor": 4276,
+            "eng": 24
+          }
+        },
+        "min_confidence": 0.0,
+        "min_score_margin": 0.75,
+        "coverage_ci95": [
+          0.7339,
+          0.7466
+        ],
+        "selective_accuracy_ci95": [
+          0.8913,
+          0.9015
+        ]
+      },
+      "stripped_policy": {
+        "total": 18402,
+        "accepted": 12772,
+        "abstained": 5630,
+        "coverage": 0.6941,
+        "selective_accuracy": 0.8696,
+        "selective_risk": 0.1304,
+        "overall_accuracy": 0.6035,
+        "accepted_macro_f1": 0.8973,
+        "accepted_weighted_f1": 0.8997,
+        "labels": {
+          "hau": {
+            "support": 5303,
+            "accepted": 3205,
+            "coverage": 0.6044,
+            "selective_accuracy": 0.8889
+          },
+          "ibo": {
+            "support": 3682,
+            "accepted": 2273,
+            "coverage": 0.6173,
+            "selective_accuracy": 0.7985
+          },
+          "pcm": {
+            "support": 4154,
+            "accepted": 3091,
+            "coverage": 0.7441,
+            "selective_accuracy": 0.8101
+          },
+          "swa": {
+            "support": 748,
+            "accepted": 538,
+            "coverage": 0.7193,
+            "selective_accuracy": 0.9721
+          },
+          "yor": {
+            "support": 4515,
+            "accepted": 3665,
+            "coverage": 0.8117,
+            "selective_accuracy": 0.9318
+          }
+        },
+        "confusion_matrix": {
+          "hau": {
+            "hau": 2849,
+            "ibo": 38,
+            "pcm": 113,
+            "swa": 27,
+            "yor": 43,
+            "eng": 135
+          },
+          "ibo": {
+            "hau": 71,
+            "ibo": 1815,
+            "pcm": 166,
+            "swa": 27,
+            "yor": 69,
+            "eng": 125
+          },
+          "pcm": {
+            "hau": 4,
+            "ibo": 5,
+            "pcm": 2504,
+            "swa": 2,
+            "yor": 117,
+            "eng": 459
+          },
+          "swa": {
+            "hau": 3,
+            "ibo": 2,
+            "pcm": 2,
+            "swa": 523,
+            "yor": 1,
+            "eng": 7
+          },
+          "yor": {
+            "hau": 36,
+            "ibo": 9,
+            "pcm": 12,
+            "swa": 43,
+            "yor": 3415,
+            "eng": 150
+          }
+        },
+        "min_confidence": 0.0,
+        "min_score_margin": 0.75,
+        "coverage_ci95": [
+          0.6874,
+          0.7007
+        ],
+        "selective_accuracy_ci95": [
+          0.8636,
+          0.8753
+        ]
+      },
+      "languages": {
+        "hau": {
+          "support": 5303,
+          "original_accuracy": 0.6419,
+          "stripped_accuracy": 0.6423,
+          "accuracy_difference": 0.0004,
+          "route_flip_rate": 0.0009
+        },
+        "ibo": {
+          "support": 3682,
+          "original_accuracy": 0.6589,
+          "stripped_accuracy": 0.5994,
+          "accuracy_difference": -0.0595,
+          "route_flip_rate": 0.0872
+        },
+        "pcm": {
+          "support": 4154,
+          "original_accuracy": 0.7169,
+          "stripped_accuracy": 0.7179,
+          "accuracy_difference": 0.001,
+          "route_flip_rate": 0.0012
+        },
+        "swa": {
+          "support": 748,
+          "original_accuracy": 0.8262,
+          "stripped_accuracy": 0.8262,
+          "accuracy_difference": 0.0,
+          "route_flip_rate": 0.0
+        },
+        "yor": {
+          "support": 4515,
+          "original_accuracy": 0.959,
+          "stripped_accuracy": 0.8073,
+          "accuracy_difference": -0.1517,
+          "route_flip_rate": 0.1517
+        }
+      }
+    }
+  }
+}

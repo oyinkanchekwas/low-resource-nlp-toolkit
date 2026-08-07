@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import unittest
 
-from low_resource_nlp.routing import LexicalLanguageRouter, character_ngrams, softmax_scores
+from low_resource_nlp.routing import (
+    LexicalLanguageRouter,
+    character_ngrams,
+    score_margin,
+    softmax_scores,
+)
 
 
 class RoutingTests(unittest.TestCase):
@@ -32,6 +37,32 @@ class RoutingTests(unittest.TestCase):
     def test_softmax_scores(self) -> None:
         scores = softmax_scores({"a": 1.0, "b": 2.0})
         self.assertAlmostEqual(sum(scores.values()), 1.0)
+
+    def test_score_margin_uses_two_strongest_positive_scores(self) -> None:
+        self.assertEqual(score_margin({"a": 2.5, "b": 1.0, "c": 0.0}), 1.5)
+
+    def test_selective_route_accepts_strong_evidence(self) -> None:
+        result = self.router.route_selectively(
+            "Ẹ káàrọ̀, báwo ni?",
+            min_score_margin=0.75,
+        )
+
+        self.assertTrue(result.accepted)
+        self.assertEqual(result.accepted_language_code, "yor")
+        self.assertIsNone(result.abstention_reason)
+
+    def test_selective_route_abstains_on_narrow_margin(self) -> None:
+        result = self.router.route_selectively("check", min_score_margin=0.75)
+
+        self.assertFalse(result.accepted)
+        self.assertIsNone(result.accepted_language_code)
+        self.assertEqual(result.abstention_reason, "narrow_score_margin")
+
+    def test_selective_route_validates_thresholds(self) -> None:
+        with self.assertRaises(ValueError):
+            self.router.route_selectively("text", min_confidence=1.1)
+        with self.assertRaises(ValueError):
+            self.router.route_selectively("text", min_score_margin=-0.1)
 
 
 if __name__ == "__main__":

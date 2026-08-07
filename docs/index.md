@@ -1,48 +1,61 @@
 # Low-Resource NLP Toolkit
 
-This toolkit provides a small, inspectable base layer for low-resource and multilingual NLP experiments. The initial scope is African-language-focused text preparation, language routing, emotion label harmonisation, and transparent evaluation.
+The toolkit provides a compact set of Python utilities for multilingual NLP experiments. It was built around recurring problems in African-language text work: preserving orthography, checking mixed-language data, reconciling emotion labels and evaluating systems that can abstain.
 
-## Current Public Scope
+## Installation
 
-- Normalise noisy multilingual text while preserving linguistically meaningful marks.
-- Route short text to lightweight language profiles without model downloads.
-- Audit code-switched text with token routes, spans, warnings, and abstentions.
-- Harmonise emotion labels across categorical and valence-arousal formats.
-- Produce compact evaluation reports for classification and routing experiments.
-- Document responsible release decisions through model cards and data statements.
+```bash
+python -m pip install low-resource-nlp-toolkit
+```
 
-## Code-Switch Audit
+## Language routing
 
-The audit command is the project's most distinctive current feature. It is meant for corpus triage: seeing which language signals appear in a short text, where a route is weak, and whether the text should be treated as mixed rather than forced into one label.
+The default router covers Yoruba, Igbo, Hausa, Nigerian Pidgin, Swahili and English. It scores lexical, character and script evidence and returns the evidence behind each route.
+
+```bash
+low-resource-nlp route "Ẹ káàrọ̀, báwo ni?"
+```
+
+Short or mixed text can leave several routes close together. Set a minimum score margin to reject those cases:
+
+```bash
+low-resource-nlp route "check" --min-score-margin 0.75
+```
+
+The same operation is available in Python through `LexicalLanguageRouter.route_selectively`.
+
+## Code-switch audits
 
 ```bash
 low-resource-nlp audit "abeg make una check this model output"
 ```
 
-The output includes token offsets, accepted language spans, a language mix, a code-switch ratio, and warnings such as `mixed_language_signals` or `ambiguous_or_weak_token_routes`.
+An audit records each token's character offsets, proposed route, evidence and score margin. It also groups accepted tokens into spans and reports warnings when the language evidence is mixed or weak.
 
-## What This Project Is Not
+## Benchmark
 
-This is not an identity detector, clinical assessment tool, or claim that short text can determine a speaker's language community. The routing module is a research utility for experiment scaffolding and should be evaluated against task-specific data.
-
-## Local Checks
+The [AfriSenti routing benchmark](benchmark.md) uses pinned development and test data for five languages. The report includes ordinary routing accuracy, coverage and accuracy under rejection, per-language results, confidence intervals and a paired diacritic-removal stress test.
 
 ```bash
-make check
+make benchmark
 ```
 
-The checks run a repository quality gate and the full unit test suite.
+The data is downloaded from the official AfriSenti repository and verified against hashes in the benchmark manifest. Only aggregate results are committed here.
 
-## Package Boundary
+## Other modules
 
-The package remains dependency-light by design. It does not bundle benchmark datasets, model weights, or API-backed demos.
+- `normalisation` cleans noisy text while retaining linguistically meaningful marks.
+- `labels` maps common emotion names to a canonical set and valence-arousal coordinates.
+- `evaluation` produces classification and selective-routing reports.
+- `datasets` reads simple CSV and JSONL experiment files.
 
-## How It Fits
+## Boundaries
 
-The project is a preparation and audit layer for low-resource text work. For broad language identification, use it alongside task-specific evaluation and stronger model-based systems. See [Technical Scope](scope.md).
+The package does not contain private datasets, model weights or API-backed features. Routing results describe evidence in a text sample; they do not establish a speaker's identity or language community. See [Technical Scope](scope.md) for further detail.
 
-## Release Notes
+## Releases
 
-- [Version 0.2.1 Release Notes](release_notes_v0_2_1.md)
-- [Version 0.2.0 Release Notes](release_notes_v0_2.md)
-- [Version 0.1.0 Release Notes](release_notes_v0_1.md)
+- [Version 0.3.0](release_notes_v0_3.md)
+- [Version 0.2.1](release_notes_v0_2_1.md)
+- [Version 0.2.0](release_notes_v0_2.md)
+- [Version 0.1.0](release_notes_v0_1.md)

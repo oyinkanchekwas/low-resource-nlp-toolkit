@@ -2,6 +2,21 @@
 
 All notable changes to this project are recorded here. The format is deliberately plain so release decisions remain easy to audit.
 
+## 0.3.0 - 2026-08-07
+
+### Added
+
+- Selective language routing with configurable confidence and score-margin thresholds.
+- Coverage-aware evaluation for systems that can reject uncertain predictions.
+- A reproducible AfriSenti benchmark covering Hausa, Igbo, Nigerian Pidgin, Swahili and Yoruba.
+- A paired stress test that measures how diacritic removal changes routing results.
+- Input manifests, file hashes, aggregate JSON results and statistical intervals for the benchmark.
+
+### Changed
+
+- The route command now reports the score margin, acceptance decision and reason for abstention.
+- Version checks now include `CITATION.cff` as well as the package metadata and source version.
+
 ## 0.2.1 - 2026-08-07
 
 ### Changed
@@ -38,4 +53,3 @@ All notable changes to this project are recorded here. The format is deliberatel
 
 - The first release deliberately avoids shipping private datasets, API-backed features, or bundled model weights.
 - The core is dependency-light so researchers can inspect the behaviour before adding heavier model backends.
-- Public benchmark work is kept separate from the core package until dataset provenance and documentation are ready.

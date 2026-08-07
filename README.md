@@ -1,38 +1,30 @@
 # Low-Resource NLP Toolkit
 
-A public, research-facing Python toolkit for African language pre-processing, emotion-label mapping, evaluation, and language/dialect routing.
+Python tools for preparing and evaluating multilingual text, with an initial focus on African languages. The package covers Unicode-aware normalisation, lightweight language routing, code-switch audits, emotion-label mapping and classification metrics.
 
-The project collects the practical NLP utilities that low-resource and multilingual experiments often need before modelling starts: noisy text cleanup, code-switching checks, uneven label taxonomies, small datasets, and evaluation that remains easy to inspect.
+Current release: `0.3.0`.
 
-Status: current public release `0.2.1`.
+## What it covers
 
-## Why This Exists
+- Text normalisation that preserves diacritics by default.
+- Lexical routing for Yoruba, Igbo, Hausa, Nigerian Pidgin, Swahili and English.
+- Selective routing, so weak decisions can be rejected instead of forced into a language.
+- Token-level code-switch audits with evidence spans and character offsets.
+- Emotion-label harmonisation across categorical and valence-arousal formats.
+- Classification, confusion-matrix and coverage-aware evaluation.
+- A command-line interface with no model download or API key requirement.
 
-Low-resource NLP projects often spend too much time rebuilding the same foundations before modelling begins. This toolkit provides a dependable base layer:
+## Measured benchmark
 
-- Text normalisation for noisy social, conversational, and cultural text.
-- Lightweight African language routing for Yoruba, Igbo, Hausa, Nigerian Pidgin, Swahili, and English.
-- Evidence-first code-switch audits that expose token routes, spans, and abstentions.
-- Emotion label harmonisation across categorical and valence-arousal formats.
-- Evaluation utilities for classification and routing experiments.
-- A CLI and examples that run without downloading model weights.
-- Extension points for transformer or embedding backends when a project needs heavier models.
+The router has been evaluated on the official AfriSenti development and test splits for Hausa, Igbo, Nigerian Pidgin, Swahili and Yoruba. The source revision and file hashes are pinned, and the source tweets remain outside this repository.
 
-## Architecture
+On 18,402 held-out test tweets, ordinary corpus-language routing accuracy was 74.75%. A rejection threshold chosen on development data reached 89.65% accuracy on the accepted test items at 74.03% coverage.
 
-```mermaid
-flowchart LR
-    A["Raw multilingual text"] --> B["Normaliser"]
-    B --> C["Tokeniser"]
-    C --> D["Language router"]
-    C --> E["Emotion label mapper"]
-    D --> F["Route decision + confidence"]
-    E --> G["Canonical emotion / valence-arousal"]
-    F --> H["Evaluation reports"]
-    G --> H
-```
+A paired stress test also measured the effect of removing diacritics. Overall accuracy fell from 74.75% to 69.87%; the largest changes were for Yoruba, down 15.17 percentage points, and Igbo, down 5.95 points. This is why the normaliser preserves diacritics unless removal is requested explicitly.
 
-## Quick Start
+See the [full benchmark report](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/benchmark/) for the method, per-language results, confidence intervals and limitations.
+
+## Installation
 
 ```bash
 python3 -m venv .venv
@@ -45,6 +37,12 @@ Route a text sample:
 
 ```bash
 low-resource-nlp route "abeg make una help me check this model output"
+```
+
+Reject routes with a narrow score margin:
+
+```bash
+low-resource-nlp route "check" --min-score-margin 0.75
 ```
 
 Audit code-switched language evidence:
@@ -65,20 +63,7 @@ Map an emotion label:
 low-resource-nlp label joy
 ```
 
-Run tests:
-
-```bash
-make check
-```
-
-Without `make`:
-
-```bash
-python3 scripts/quality_gate.py
-PYTHONPATH=src python3 -m unittest discover -s tests
-```
-
-## Python Usage
+## Python API
 
 ```python
 from low_resource_nlp import (
@@ -89,42 +74,45 @@ from low_resource_nlp import (
 )
 
 text = normalise_text("Ẹ káàrọ̀, báwo ni?")
-decision = LexicalLanguageRouter.default().route(text)
+router = LexicalLanguageRouter.default()
+route = router.route_selectively(text, min_score_margin=0.75)
 audit = audit_code_switching("abeg make una check this model output")
 emotion = label_to_valence_arousal("joy")
 
-print(decision.language_code, decision.confidence)
+print(route.accepted_language_code, route.score_margin)
 print(audit.language_mix, audit.warnings)
 print(emotion)
 ```
 
-## Current Scope
+## Reproducing the benchmark
 
-The public package deliberately avoids bundling private datasets or model weights. The core is deterministic, inspectable, and dependency-light. Optional embedding and transformer backends are outside the current core package.
+```bash
+git clone https://github.com/oyinkanchekwas/low-resource-nlp-toolkit.git
+cd low-resource-nlp-toolkit
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+make benchmark
+```
 
-Supported core modules:
+The command downloads the ten pinned AfriSenti files, verifies their SHA-256 hashes, selects the rejection policy on development data and writes aggregate test results. It does not copy source tweets into the report.
 
-- `normalisation`: Unicode-aware text cleaning, URL/user normalisation, tokenisation, repeated-character handling.
-- `routing`: script-aware and lexicon-assisted language routing.
-- `audit`: token-level code-switch audits with spans, evidence, and abstention warnings.
-- `labels`: canonical emotion labels and valence-arousal mapping.
-- `evaluation`: precision, recall, F1, macro/micro summaries, and confusion matrices.
-- `datasets`: simple CSV/JSONL readers for experiment scaffolding.
+Run the local checks with:
 
-## Public Project Materials
+```bash
+make check
+```
+
+## Limitations
+
+The router uses small, inspectable lexical profiles. It is useful for corpus checks, teaching and reproducible baselines, but it is not a substitute for a trained language-identification model or native-speaker review. AfriSenti provides corpus-level language labels and includes code-mixed text, so an apparent routing error is not always an incorrect word-level decision.
+
+Language and emotion predictions must not be treated as identity labels, clinical assessments or ground truth about a person.
+
+## Links
 
 - [Documentation](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/)
+- [Benchmark report](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/benchmark/)
 - [Changelog](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CHANGELOG.md)
 - [Contributing guide](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CONTRIBUTING.md)
-- [Technical scope](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/scope.md)
-- [0.2.1 release notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_notes_v0_2_1.md)
-- [0.2.0 release notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_notes_v0_2.md)
-- [0.1.0 release notes](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/release_notes_v0_1.md)
-- [Use log](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/adoption.md)
-- [Model card template](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/model_card_template.md)
-- [Data statement template](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/docs/data_statement_template.md)
 - [Citation metadata](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/main/CITATION.cff)
-
-## Responsible AI Notes
-
-This toolkit is for research and prototyping. Language, dialect, and emotion labels are socially and culturally sensitive. Do not treat routing or emotion predictions as identity labels, clinical assessments, or ground truth. Always evaluate with speakers, domain experts, and context-specific data.

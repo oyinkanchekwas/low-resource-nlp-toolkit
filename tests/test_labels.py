@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import unittest
 
-from low_resource_nlp.labels import label_to_valence_arousal, normalise_emotion_label, parse_label_va
+from low_resource_nlp.labels import (
+    label_to_valence_arousal,
+    normalise_emotion_label,
+    parse_label_va,
+)
 
 
 class LabelTests(unittest.TestCase):

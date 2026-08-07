@@ -2,6 +2,7 @@
 
 from ._version import __version__
 from .audit import CodeSwitchAudit, LanguageSpan, TokenAudit, audit_code_switching
+from .evaluation import selective_classification_report
 from .labels import (
     CANONICAL_EMOTIONS,
     EmotionMapping,
@@ -9,8 +10,19 @@ from .labels import (
     normalise_emotion_label,
     parse_label_va,
 )
-from .normalisation import NormalisationConfig, normalise_for_matching, normalise_text, tokenise_words
-from .routing import LanguageProfile, LexicalLanguageRouter, RouteDecision
+from .normalisation import (
+    NormalisationConfig,
+    normalise_for_matching,
+    normalise_text,
+    tokenise_words,
+)
+from .routing import (
+    LanguageProfile,
+    LexicalLanguageRouter,
+    RouteDecision,
+    SelectiveRouteDecision,
+    score_margin,
+)
 
 __all__ = [
     "CANONICAL_EMOTIONS",
@@ -21,6 +33,7 @@ __all__ = [
     "LexicalLanguageRouter",
     "NormalisationConfig",
     "RouteDecision",
+    "SelectiveRouteDecision",
     "TokenAudit",
     "audit_code_switching",
     "label_to_valence_arousal",
@@ -28,6 +41,8 @@ __all__ = [
     "normalise_for_matching",
     "normalise_text",
     "parse_label_va",
+    "score_margin",
+    "selective_classification_report",
     "tokenise_words",
     "__version__",
 ]

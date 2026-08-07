@@ -23,7 +23,9 @@ def safe_divide(numerator: float, denominator: float) -> float:
     return numerator / denominator if denominator else 0.0
 
 
-def ordered_labels(y_true: Sequence[str], y_pred: Sequence[str], labels: Sequence[str] | None = None) -> List[str]:
+def ordered_labels(
+    y_true: Sequence[str], y_pred: Sequence[str], labels: Sequence[str] | None = None
+) -> List[str]:
     """Return deterministic label order."""
 
     if labels:
@@ -62,9 +64,7 @@ def precision_recall_f1(
     label_order = ordered_labels(y_true, y_pred, labels)
     true_counts = Counter(y_true)
     pred_counts = Counter(y_pred)
-    correct_counts = Counter(
-        truth for truth, pred in zip(y_true, y_pred) if truth == pred
-    )
+    correct_counts = Counter(truth for truth, pred in zip(y_true, y_pred) if truth == pred)
 
     metrics: Dict[str, LabelMetrics] = {}
     for label in label_order:
@@ -112,6 +112,68 @@ def classification_report(
             for label, metric in metrics.items()
         },
         "confusion_matrix": confusion_matrix(y_true, y_pred, list(metrics)),
+    }
+
+
+def selective_classification_report(
+    y_true: Sequence[str],
+    y_pred: Sequence[str],
+    accepted: Sequence[bool],
+    labels: Sequence[str] | None = None,
+) -> Mapping[str, object]:
+    """Report accuracy and coverage for predictions that may be rejected."""
+
+    if len(y_true) != len(y_pred) or len(y_true) != len(accepted):
+        raise ValueError("y_true, y_pred and accepted must have the same length.")
+
+    label_order = ordered_labels(y_true, y_pred, labels)
+    accepted_pairs = [
+        (truth, prediction) for truth, prediction, keep in zip(y_true, y_pred, accepted) if keep
+    ]
+    accepted_truth = [truth for truth, _ in accepted_pairs]
+    accepted_predictions = [prediction for _, prediction in accepted_pairs]
+    accepted_count = len(accepted_pairs)
+    total = len(y_true)
+    correct_count = sum(truth == prediction for truth, prediction in accepted_pairs)
+
+    if accepted_pairs:
+        accepted_report = classification_report(
+            accepted_truth,
+            accepted_predictions,
+            label_order,
+        )
+    else:
+        accepted_report = classification_report([], [], label_order)
+
+    per_label: Dict[str, Mapping[str, object]] = {}
+    for label in label_order:
+        support = sum(truth == label for truth in y_true)
+        selected = [
+            (truth, prediction)
+            for truth, prediction, keep in zip(y_true, y_pred, accepted)
+            if keep and truth == label
+        ]
+        selected_correct = sum(truth == prediction for truth, prediction in selected)
+        per_label[label] = {
+            "support": support,
+            "accepted": len(selected),
+            "coverage": round(safe_divide(len(selected), support), 4),
+            "selective_accuracy": round(safe_divide(selected_correct, len(selected)), 4),
+        }
+
+    selective_accuracy = safe_divide(correct_count, accepted_count)
+    return {
+        "total": total,
+        "accepted": accepted_count,
+        "abstained": total - accepted_count,
+        "coverage": round(safe_divide(accepted_count, total), 4),
+        "selective_accuracy": round(selective_accuracy, 4),
+        "selective_risk": round(1.0 - selective_accuracy, 4) if accepted_count else None,
+        "overall_accuracy": round(safe_divide(correct_count, total), 4),
+        "accepted_macro_f1": accepted_report["macro_f1"],
+        "accepted_weighted_f1": accepted_report["weighted_f1"],
+        "labels": per_label,
+        "confusion_matrix": accepted_report["confusion_matrix"],
     }
 
 

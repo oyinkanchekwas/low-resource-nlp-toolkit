@@ -32,6 +32,18 @@ class RouteDecision:
     signals: Mapping[str, List[str]] = field(default_factory=dict)
 
 
+@dataclass(frozen=True)
+class SelectiveRouteDecision:
+    """A route together with the decision to accept it or abstain."""
+
+    decision: RouteDecision
+    accepted: bool
+    accepted_language_code: str | None
+    accepted_language_name: str | None
+    score_margin: float
+    abstention_reason: str | None
+
+
 def default_profiles() -> List[LanguageProfile]:
     """Return default African-language-focused routing profiles."""
 
@@ -73,7 +85,16 @@ def default_profiles() -> List[LanguageProfile]:
             code="eng",
             name="English",
             stopwords=("the", "and", "is", "in", "to", "of", "for", "with", "this", "that"),
-            keywords=("hello", "please", "model", "language", "research", "data", "music", "emotion"),
+            keywords=(
+                "hello",
+                "please",
+                "model",
+                "language",
+                "research",
+                "data",
+                "music",
+                "emotion",
+            ),
         ),
     ]
 
@@ -85,6 +106,17 @@ def character_ngrams(text: str, n: int = 3) -> List[str]:
     if len(collapsed) < n:
         return [collapsed] if collapsed else []
     return [collapsed[index : index + n] for index in range(len(collapsed) - n + 1)]
+
+
+def score_margin(scores: Mapping[str, float]) -> float:
+    """Return the gap between the two strongest positive routing scores."""
+
+    positive = sorted((score for score in scores.values() if score > 0), reverse=True)
+    if not positive:
+        return 0.0
+    if len(positive) == 1:
+        return round(positive[0], 4)
+    return round(positive[0] - positive[1], 4)
 
 
 class LexicalLanguageRouter:
@@ -177,6 +209,70 @@ class LexicalLanguageRouter:
         """Route multiple texts."""
 
         return [self.route(text) for text in texts]
+
+    def route_selectively(
+        self,
+        text: str,
+        *,
+        min_confidence: float = 0.0,
+        min_score_margin: float = 0.0,
+    ) -> SelectiveRouteDecision:
+        """Route text and abstain when the evidence does not meet both thresholds."""
+
+        if not 0.0 <= min_confidence <= 1.0:
+            raise ValueError("min_confidence must be between 0 and 1.")
+        if min_score_margin < 0.0:
+            raise ValueError("min_score_margin must be non-negative.")
+
+        decision = self.route(text)
+        margin = score_margin(decision.scores)
+        low_confidence = decision.confidence < min_confidence
+        narrow_margin = margin < min_score_margin
+
+        if decision.language_code == "und":
+            reason = "undetermined"
+        elif low_confidence and narrow_margin:
+            reason = "low_confidence_and_narrow_score_margin"
+        elif low_confidence:
+            reason = "low_confidence"
+        elif narrow_margin:
+            reason = "narrow_score_margin"
+        else:
+            return SelectiveRouteDecision(
+                decision=decision,
+                accepted=True,
+                accepted_language_code=decision.language_code,
+                accepted_language_name=decision.language_name,
+                score_margin=margin,
+                abstention_reason=None,
+            )
+
+        return SelectiveRouteDecision(
+            decision=decision,
+            accepted=False,
+            accepted_language_code=None,
+            accepted_language_name=None,
+            score_margin=margin,
+            abstention_reason=reason,
+        )
+
+    def route_many_selectively(
+        self,
+        texts: Iterable[str],
+        *,
+        min_confidence: float = 0.0,
+        min_score_margin: float = 0.0,
+    ) -> List[SelectiveRouteDecision]:
+        """Apply one selective routing policy to several texts."""
+
+        return [
+            self.route_selectively(
+                text,
+                min_confidence=min_confidence,
+                min_score_margin=min_score_margin,
+            )
+            for text in texts
+        ]
 
 
 def softmax_scores(scores: Mapping[str, float]) -> Dict[str, float]:

@@ -6,7 +6,6 @@ import re
 import sys
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {
     ".cff",
@@ -102,15 +101,21 @@ def check_language_and_secrets() -> list[str]:
 def check_version_consistency() -> list[str]:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     version_file = (ROOT / "src" / "low_resource_nlp" / "_version.py").read_text(encoding="utf-8")
+    citation = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
     pyproject_match = re.search(r'^version = "([^"]+)"', pyproject, flags=re.MULTILINE)
     source_match = re.search(r'^__version__ = "([^"]+)"', version_file, flags=re.MULTILINE)
-    if not pyproject_match or not source_match:
-        return ["Could not find package version in pyproject.toml or _version.py."]
-    if pyproject_match.group(1) != source_match.group(1):
+    citation_match = re.search(r'^version: "([^"]+)"', citation, flags=re.MULTILINE)
+    if not pyproject_match or not source_match or not citation_match:
+        return ["Could not find the package version in every release metadata file."]
+    versions = {
+        "pyproject.toml": pyproject_match.group(1),
+        "_version.py": source_match.group(1),
+        "CITATION.cff": citation_match.group(1),
+    }
+    if len(set(versions.values())) != 1:
         return [
             "Version mismatch: "
-            f"pyproject.toml={pyproject_match.group(1)} "
-            f"_version.py={source_match.group(1)}"
+            + " ".join(f"{name}={version}" for name, version in versions.items())
         ]
     return []
 

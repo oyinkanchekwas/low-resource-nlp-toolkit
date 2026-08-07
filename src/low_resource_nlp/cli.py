@@ -23,7 +23,9 @@ def _print_json(value: object) -> None:
 def build_parser() -> argparse.ArgumentParser:
     """Build the CLI parser."""
 
-    parser = argparse.ArgumentParser(description="Low-resource NLP pre-processing and routing tools.")
+    parser = argparse.ArgumentParser(
+        description="Low-resource NLP pre-processing and routing tools."
+    )
     parser.add_argument("--version", action="version", version=f"low-resource-nlp {__version__}")
     subcommands = parser.add_subparsers(dest="command", required=True)
 
@@ -32,6 +34,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     route = subcommands.add_parser("route", help="Route a text string to a language profile.")
     route.add_argument("text")
+    route.add_argument("--min-confidence", type=float, default=0.0)
+    route.add_argument("--min-score-margin", type=float, default=0.0)
 
     audit = subcommands.add_parser("audit", help="Audit language evidence across a text string.")
     audit.add_argument("text")
@@ -41,7 +45,9 @@ def build_parser() -> argparse.ArgumentParser:
     label = subcommands.add_parser("label", help="Map an emotion label to the canonical taxonomy.")
     label.add_argument("label")
 
-    evaluate = subcommands.add_parser("evaluate", help="Evaluate a CSV/JSONL file with truth and prediction fields.")
+    evaluate = subcommands.add_parser(
+        "evaluate", help="Evaluate a CSV/JSONL file with truth and prediction fields."
+    )
     evaluate.add_argument("path", type=Path)
     evaluate.add_argument("--truth-field", default="label")
     evaluate.add_argument("--prediction-field", default="prediction")
@@ -60,12 +66,22 @@ def main(argv: List[str] | None = None) -> int:
         return 0
 
     if args.command == "route":
-        decision = LexicalLanguageRouter.default().route(args.text)
+        result = LexicalLanguageRouter.default().route_selectively(
+            args.text,
+            min_confidence=args.min_confidence,
+            min_score_margin=args.min_score_margin,
+        )
+        decision = result.decision
         _print_json(
             {
                 "language_code": decision.language_code,
                 "language_name": decision.language_name,
                 "confidence": decision.confidence,
+                "score_margin": result.score_margin,
+                "accepted": result.accepted,
+                "accepted_language_code": result.accepted_language_code,
+                "accepted_language_name": result.accepted_language_name,
+                "abstention_reason": result.abstention_reason,
                 "scores": decision.scores,
                 "signals": decision.signals,
             }

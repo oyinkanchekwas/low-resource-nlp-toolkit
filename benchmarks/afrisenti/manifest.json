@@ -1,0 +1,81 @@
+{
+  "dataset": {
+    "name": "AfriSenti-SemEval 2023 Subtask A",
+    "repository": "https://github.com/afrisenti-semeval/afrisent-semeval-2023",
+    "revision": "5aec3cfcf87b59f885e98641f72e52182776429d",
+    "licence": "CC BY 4.0",
+    "paper": "https://aclanthology.org/2023.semeval-1.315/"
+  },
+  "files": [
+    {
+      "language": "hau",
+      "split": "development",
+      "path": "SubtaskA/dev/ha_dev.tsv",
+      "local_name": "hau-dev.tsv",
+      "sha256": "88e45573e543728b0ae92971d1294f768c7617f83f792e895d2b3e083c8ad983"
+    },
+    {
+      "language": "hau",
+      "split": "test",
+      "path": "SubtaskA/test/ha_test.tsv",
+      "local_name": "hau.tsv",
+      "sha256": "68e2f588e91d0d4374d2e521a77fa7016718accea0c1c2e74905f9fe9339b1d6"
+    },
+    {
+      "language": "ibo",
+      "split": "development",
+      "path": "SubtaskA/dev/ig_dev.tsv",
+      "local_name": "ibo-dev.tsv",
+      "sha256": "b9ea3324b0ca5fc165862d0f23132a8fe066b2612a285c2f26aca5c0c070423e"
+    },
+    {
+      "language": "ibo",
+      "split": "test",
+      "path": "SubtaskA/test/ig_test.tsv",
+      "local_name": "ibo.tsv",
+      "sha256": "c93378df9bc53d301f34d2bdd89abdbc29f72bed3d86cc53ca15259e83bba6cf"
+    },
+    {
+      "language": "pcm",
+      "split": "development",
+      "path": "SubtaskA/dev/pcm_dev.tsv",
+      "local_name": "pcm-dev.tsv",
+      "sha256": "4068829920965d520343c8921008b7beefa59563a929e41a8eaf2aa2681d1d1d"
+    },
+    {
+      "language": "pcm",
+      "split": "test",
+      "path": "SubtaskA/test/pcm_test.tsv",
+      "local_name": "pcm.tsv",
+      "sha256": "3dbc11358da8698275fb3ea344d16e03dca24ec43e7f7c344676f678262877dc"
+    },
+    {
+      "language": "swa",
+      "split": "development",
+      "path": "SubtaskA/dev/sw_dev.tsv",
+      "local_name": "swa-dev.tsv",
+      "sha256": "c9f2cc725630b1b3e6a46c9a56b1c45676275df22e57355c46a43bead09306c0"
+    },
+    {
+      "language": "swa",
+      "split": "test",
+      "path": "SubtaskA/test/sw_test.tsv",
+      "local_name": "swa.tsv",
+      "sha256": "874877b294b8400dbe098fa5785da690dcb99f857275c3a23bf835174d2194bf"
+    },
+    {
+      "language": "yor",
+      "split": "development",
+      "path": "SubtaskA/dev/yo_dev.tsv",
+      "local_name": "yor-dev.tsv",
+      "sha256": "69f63d070863ed0fd6aad8fd90c8df86a0188af00b28db21784e961804b7227f"
+    },
+    {
+      "language": "yor",
+      "split": "test",
+      "path": "SubtaskA/test/yo_test.tsv",
+      "local_name": "yor.tsv",
+      "sha256": "b483794725d7adf9c952ec198e48be437fb59e82be2d230fc7e88b55007cb971"
+    }
+  ]
+}

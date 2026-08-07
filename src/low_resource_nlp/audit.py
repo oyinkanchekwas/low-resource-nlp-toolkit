@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Mapping, Sequence
 
 from .normalisation import JOINER_CHARS, normalise_text
-from .routing import LexicalLanguageRouter
+from .routing import LexicalLanguageRouter, score_margin
 
 AMBIGUOUS = "ambiguous"
 UNDETERMINED = "und"
@@ -152,15 +152,6 @@ def iter_word_offsets(text: str) -> List[tuple[str, int, int]]:
     return tokens
 
 
-def _score_margin(scores: Mapping[str, float]) -> float:
-    positive = sorted((score for score in scores.values() if score > 0), reverse=True)
-    if not positive:
-        return 0.0
-    if len(positive) == 1:
-        return round(positive[0], 4)
-    return round(positive[0] - positive[1], 4)
-
-
 def _language_name(router: LexicalLanguageRouter, code: str) -> str:
     if code == AMBIGUOUS:
         return "Ambiguous"
@@ -182,7 +173,7 @@ def audit_token(
     """Audit one token and decide whether its route is strong enough to use."""
 
     decision = router.route(token)
-    margin = _score_margin(decision.scores)
+    margin = score_margin(decision.scores)
     normalised = normalise_text(token)
 
     if decision.language_code == UNDETERMINED:
