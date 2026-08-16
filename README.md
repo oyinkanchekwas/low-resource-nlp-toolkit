@@ -8,7 +8,7 @@ Current release: `0.3.0`.
 
 - Text normalisation that preserves diacritics by default.
 - Lexical routing for Yoruba, Igbo, Hausa, Nigerian Pidgin, Swahili and English.
-- Selective routing, so weak decisions can be rejected instead of forced into a language.
+- Selective routing, so weak decisions can be rejected and left unassigned.
 - Token-level code-switch audits with evidence spans and character offsets.
 - Emotion-label harmonisation across categorical and valence-arousal formats.
 - Classification, confusion-matrix and coverage-aware evaluation.
@@ -105,9 +105,9 @@ make check
 
 ## Limitations
 
-The router uses small, inspectable lexical profiles. It is useful for corpus checks, teaching and reproducible baselines, but it is not a substitute for a trained language-identification model or native-speaker review. AfriSenti provides corpus-level language labels and includes code-mixed text, so an apparent routing error is not always an incorrect word-level decision.
+The router uses small, inspectable lexical profiles. It is useful for corpus checks, teaching, small experiments and reproducible baselines. Trained language-identification models and native-speaker review are still needed for broader coverage. AfriSenti provides corpus-level language labels and includes code-mixed text, so an apparent routing error is not always an incorrect word-level decision.
 
-Language and emotion predictions must not be treated as identity labels, clinical assessments or ground truth about a person.
+Language and emotion predictions must not be treated as identity labels or clinical assessments.
 
 ## Links
 

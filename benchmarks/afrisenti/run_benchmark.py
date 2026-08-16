@@ -464,8 +464,8 @@ def render_markdown(report: Mapping[str, object]) -> str:
             (
                 "AfriSenti assigns each tweet to a source-language corpus and includes code-mixed "
                 "text. It does not provide word-level language labels. An English route inside a "
-                "Hausa or Nigerian Pidgin subset can reflect genuine code-mixing rather than an "
-                "unambiguous routing error."
+                "Hausa or Nigerian Pidgin subset may reflect code-mixing, so it is not "
+                "automatically a word-level routing error."
             ),
             "",
             "## Reproduce",

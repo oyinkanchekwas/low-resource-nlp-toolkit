@@ -282,8 +282,8 @@ def audit_code_switching(
 ) -> CodeSwitchAudit:
     """Audit language evidence across tokens in a short text.
 
-    The audit is designed for corpus triage rather than identity inference. It
-    favours abstention when token-level evidence is weak or confusable.
+    Use the audit for corpus triage, never identity inference. It favours
+    abstention when token-level evidence is weak or confusable.
     """
 
     active_router = router or LexicalLanguageRouter.default()

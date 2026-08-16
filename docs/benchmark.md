@@ -39,7 +39,7 @@ Across all test examples, accuracy changed from 74.75% to 69.87%. The paired dif
 
 The selected policy trades coverage for fewer accepted errors. Its score margin is a ranking gap, not a calibrated probability. The held-out result is therefore a measurement of this fixed router on this corpus, not a general accuracy guarantee.
 
-AfriSenti assigns each tweet to a source-language corpus and includes code-mixed text. It does not provide word-level language labels. An English route inside a Hausa or Nigerian Pidgin subset can reflect genuine code-mixing rather than an unambiguous routing error.
+AfriSenti assigns each tweet to a source-language corpus and includes code-mixed text. It does not provide word-level language labels. An English route inside a Hausa or Nigerian Pidgin subset may reflect code-mixing, so it is not automatically a word-level routing error.
 
 ## Reproduce
 

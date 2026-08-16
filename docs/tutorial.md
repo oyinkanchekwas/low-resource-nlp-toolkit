@@ -1,6 +1,6 @@
 # Triage a multilingual corpus
 
-Short social and conversational texts are often ambiguous. A useful first pass should separate strong routes from texts that need review instead of assigning every record to a language.
+Short social and conversational texts are often ambiguous. A useful first pass should accept strong routes and send uncertain texts for review.
 
 This example reads either CSV or JSONL, applies the default router and writes one JSON object per input record. The `accepted_language` field is empty when the score margin is below the threshold.
 
@@ -60,7 +60,7 @@ for token in audit.tokens:
     print(token.text, token.accepted_language_code, token.score_margin, token.signals)
 ```
 
-Token offsets in the audit refer to the original text, so a review interface can highlight the exact evidence without re-tokenising the record.
+Token offsets in the audit refer to the original text, so a review interface can mark the exact evidence without re-tokenising the record.
 
 ## Measuring a policy
 
@@ -93,5 +93,5 @@ Choose thresholds on development data, then keep them fixed for the test set. Th
 
 - Check results separately for every language represented in the corpus.
 - Keep diacritics unless the downstream method requires their removal.
-- Review rejected and code-mixed records rather than treating them as noise.
+- Review rejected and code-mixed records as a separate group; do not treat them as noise.
 - Do not interpret a text route as a person's identity or language community.

@@ -16,7 +16,7 @@ The core package has no third-party runtime dependencies. This keeps its decisio
 
 The AfriSenti benchmark measures corpus-language routing for Hausa, Igbo, Nigerian Pidgin, Swahili and Yoruba. Thresholds are selected on development data and applied unchanged to the test split. The benchmark also repeats each test prediction after diacritic removal, allowing the effect of that normalisation choice to be measured on paired examples.
 
-AfriSenti labels identify the source corpus rather than every token in a tweet. Because the data includes code-mixing, the report does not claim word-level language-identification accuracy.
+AfriSenti labels apply to the source corpus; they do not label every token in a tweet. Because the data includes code-mixing, the report does not claim word-level language-identification accuracy.
 
 ## Data and privacy
 
@@ -24,7 +24,7 @@ AfriSenti labels identify the source corpus rather than every token in a tweet. 
 - No model weights are committed.
 - No credentials are required.
 - Benchmark source files are downloaded from a pinned public revision and checked against recorded hashes.
-- Reports contain aggregate measurements rather than source tweets.
+- Reports contain aggregate measurements and omit source tweets.
 
 ## Adding a language or benchmark
 
