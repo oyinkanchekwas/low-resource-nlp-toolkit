@@ -4,6 +4,12 @@ Python tools for preparing and evaluating multilingual text, with an initial foc
 
 Current release: `0.3.0`.
 
+**[Install from PyPI](https://pypi.org/project/low-resource-nlp-toolkit/)**
+
+```bash
+pip install low-resource-nlp-toolkit
+```
+
 ## What it covers
 
 - Text normalisation that preserves diacritics by default.
