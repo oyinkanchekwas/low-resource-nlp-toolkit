@@ -1,6 +1,26 @@
 # Changelog
 
-All notable changes to this project are recorded here. The format is deliberately plain so release decisions remain easy to audit.
+## 0.4.0.dev1
+
+- Require caller-supplied profiles for routing and token audits.
+- Add a JSON profile loader with configuration validation.
+- Remove the ASCII-only English score adjustment.
+- Remove the fixed emotion-category list and automatic label coordinates.
+- Add mechanical routing examples and migration guidance.
+- Keep earlier benchmark results associated with version 0.3.0.
+
+## 0.4.0 (Unreleased)
+
+- Keep supplied emotion categories distinct unless an explicit alias mapping is provided.
+- Accept dimensional ratings with a declared scale, source, and annotation perspective.
+- Validate finite rating values against the declared scale.
+
+## 0.3.1 (Unreleased)
+
+- Exclude links and usernames from routing and token-audit evidence.
+- Reject non-finite score-margin thresholds and non-boolean acceptance values.
+- Return undefined selective metrics and intervals when their denominators are zero.
+- Include benchmark files in the source distribution.
 
 ## 0.3.0 - 2026-08-07
 

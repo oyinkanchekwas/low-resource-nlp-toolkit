@@ -8,7 +8,9 @@ from pathlib import Path
 
 from benchmarks.afrisenti.run_benchmark import (
     RoutingPrediction,
+    _percentage,
     choose_policy,
+    policy_report,
     read_manifest,
     verify_file,
     wilson_interval,
@@ -77,11 +79,31 @@ class AfriSentiBenchmarkTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 verify_file(path, "0" * 64)
 
+    def test_policy_selection_skips_thresholds_with_no_accepted_items(self) -> None:
+        predictions = [_prediction("yor", "yor", confidence=0.8, margin=1.0)]
+        policy = choose_policy(predictions, 1.0, confidence_grid=[0.0, 0.9], margin_grid=[0.0, 2.0])
+        self.assertEqual(policy["accepted"], 1)
+        with self.assertRaises(ValueError):
+            choose_policy(predictions, 1.0, confidence_grid=[0.9], margin_grid=[2.0])
+
+    def test_report_displays_undefined_accuracy_when_no_items_are_accepted(self) -> None:
+        predictions = [_prediction("yor", "yor", confidence=0.5, margin=0.5)]
+        report = policy_report(predictions, 0.9, 0.0)
+        self.assertIsNone(report["selective_accuracy"])
+        self.assertIsNone(report["selective_accuracy_ci95"])
+        self.assertEqual(_percentage(report["selective_accuracy"]), "N/A")
+
     def test_wilson_interval_contains_observed_proportion(self) -> None:
         lower, upper = wilson_interval(90, 100)
 
         self.assertLess(lower, 0.9)
         self.assertGreater(upper, 0.9)
+
+    def test_wilson_interval_requires_observations(self) -> None:
+        self.assertIsNone(wilson_interval(0, 0))
+        for successes, total in ((-1, 1), (2, 1), (1, 0)):
+            with self.subTest(successes=successes, total=total), self.assertRaises(ValueError):
+                wilson_interval(successes, total)
 
 
 if __name__ == "__main__":

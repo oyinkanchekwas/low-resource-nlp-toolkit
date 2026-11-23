@@ -2,11 +2,23 @@
 
 from __future__ import annotations
 
+import json
 import math
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Dict, Iterable, List, Mapping, Sequence, Tuple
 
-from .normalisation import normalise_for_matching, normalise_text, tokenise_words
+from .normalisation import (
+    NormalisationConfig,
+    normalise_for_matching,
+    normalise_text,
+    tokenise_words,
+)
+
+_ROUTING_NORMALISATION = NormalisationConfig(url_replacement=" ", user_replacement=" ")
+_ROUTING_MATCH_NORMALISATION = NormalisationConfig(
+    preserve_diacritics=False, url_replacement=" ", user_replacement=" "
+)
 
 
 @dataclass(frozen=True)
@@ -44,59 +56,33 @@ class SelectiveRouteDecision:
     abstention_reason: str | None
 
 
-def default_profiles() -> List[LanguageProfile]:
-    """Return default African-language-focused routing profiles."""
-
-    return [
-        LanguageProfile(
-            code="yor",
-            name="Yoruba",
-            stopwords=("ati", "ni", "si", "mo", "o", "awon", "fun", "ti", "bi", "ko"),
-            keywords=("ekaabo", "bawo", "jowo", "oruko", "ile", "omo", "e", "se"),
-            unique_chars=("ẹ", "ọ", "ṣ", "à", "á", "è", "é", "ì", "í", "ò", "ó", "ù", "ú"),
-        ),
-        LanguageProfile(
-            code="ibo",
-            name="Igbo",
-            stopwords=("na", "nke", "ndi", "ka", "bu", "m", "gi", "anyi", "ha", "o"),
-            keywords=("kedu", "biko", "nnoo", "umu", "nne", "nna", "ezi", "okwu"),
-            unique_chars=("ị", "ọ", "ụ", "ṅ"),
-        ),
-        LanguageProfile(
-            code="hau",
-            name="Hausa",
-            stopwords=("da", "na", "ne", "ce", "a", "ya", "ta", "mu", "su", "mai"),
-            keywords=("sannu", "ina", "lafiya", "gida", "mutum", "yau", "kuma", "wannan"),
-            unique_chars=("ɓ", "ɗ", "ƙ"),
-        ),
-        LanguageProfile(
-            code="pcm",
-            name="Nigerian Pidgin",
-            stopwords=("dey", "na", "no", "go", "we", "una", "dem", "me", "i", "you"),
-            keywords=("abeg", "wahala", "wetin", "sha", "sabi", "pikin", "chop", "oga", "make"),
-        ),
-        LanguageProfile(
-            code="swa",
-            name="Swahili",
-            stopwords=("na", "ya", "kwa", "ni", "wa", "katika", "hii", "hiyo", "mimi", "wewe"),
-            keywords=("habari", "asante", "tafadhali", "sana", "mtu", "watu", "nyumba", "leo"),
-        ),
-        LanguageProfile(
-            code="eng",
-            name="English",
-            stopwords=("the", "and", "is", "in", "to", "of", "for", "with", "this", "that"),
-            keywords=(
-                "hello",
-                "please",
-                "model",
-                "language",
-                "research",
-                "data",
-                "music",
-                "emotion",
-            ),
-        ),
-    ]
+def load_profiles(path: str | Path) -> List[LanguageProfile]:
+    """Read a JSON profile collection with a source description."""
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(data, dict) or set(data) != {"source", "profiles"}:
+        raise ValueError("Profile files require source and profiles fields.")
+    if not isinstance(data["source"], str) or not data["source"].strip():
+        raise ValueError("A profile source description is required.")
+    if not isinstance(data["profiles"], list) or not data["profiles"]:
+        raise ValueError("Profiles must be a non-empty list.")
+    allowed = {"code", "name", "keywords", "stopwords", "unique_chars", "aliases"}
+    profiles = []
+    for item in data["profiles"]:
+        if not isinstance(item, dict) or set(item) - allowed or not {"code", "name"} <= set(item):
+            raise ValueError(
+                "Each profile requires code and name, with recognised evidence fields."
+            )
+        fields = dict(item)
+        for field_name in ("keywords", "stopwords", "unique_chars", "aliases"):
+            value = fields.get(field_name, [])
+            if not isinstance(value, list) or any(
+                not isinstance(x, str) or not x.strip() for x in value
+            ):
+                raise ValueError("Profile evidence must be lists of non-empty strings.")
+            fields[field_name] = tuple(value)
+        profiles.append(LanguageProfile(**fields))
+    LexicalLanguageRouter(profiles)
+    return profiles
 
 
 def character_ngrams(text: str, n: int = 3) -> List[str]:
@@ -124,6 +110,32 @@ class LexicalLanguageRouter:
 
     def __init__(self, profiles: Sequence[LanguageProfile]):
         self.profiles = list(profiles)
+        if not self.profiles or any(not isinstance(p, LanguageProfile) for p in self.profiles):
+            raise ValueError("Supply at least one LanguageProfile.")
+        codes = []
+        for profile in self.profiles:
+            if any(
+                not isinstance(value, str) or not value.strip()
+                for value in (profile.code, profile.name)
+            ):
+                raise ValueError("Profile code and name must be non-empty strings.")
+            if profile.code in {"und", "ambiguous"}:
+                raise ValueError("Profile code is reserved.")
+            for values in (
+                profile.keywords,
+                profile.stopwords,
+                profile.unique_chars,
+                profile.aliases,
+            ):
+                if not isinstance(values, (tuple, list)) or any(
+                    not isinstance(x, str) or not x.strip() for x in values
+                ):
+                    raise ValueError("Profile evidence must contain non-empty strings.")
+            if not (profile.keywords or profile.stopwords or profile.unique_chars):
+                raise ValueError("Each profile requires lexical or character evidence.")
+            codes.append(profile.code)
+        if len(set(codes)) != len(codes):
+            raise ValueError("Profile codes must be distinct.")
         self.profile_by_code = {profile.code: profile for profile in self.profiles}
         self._keyword_index = {
             profile.code: {normalise_for_matching(word) for word in profile.keywords}
@@ -140,20 +152,22 @@ class LexicalLanguageRouter:
 
     @classmethod
     def default(cls) -> "LexicalLanguageRouter":
-        """Build the default router."""
+        """Require explicit profiles when migrating older callers."""
 
-        return cls(default_profiles())
+        raise ValueError("Supply profiles with LexicalLanguageRouter(load_profiles(path)).")
 
     def route(self, text: str) -> RouteDecision:
         """Route a text to the most likely language profile."""
 
-        normalised = normalise_text(text)
-        match_text = normalise_for_matching(text)
-        tokens = tokenise_words(text, match_form=True)
+        normalised = normalise_text(text, _ROUTING_NORMALISATION)
+        match_text = normalise_text(text, _ROUTING_MATCH_NORMALISATION)
+        tokens = tokenise_words(match_text)
         if not match_text:
             return RouteDecision("und", "Undetermined", 0.0, {}, {})
         token_set = set(tokens)
-        ngrams = set(character_ngrams(text))
+        if not token_set:
+            return RouteDecision("und", "Undetermined", 0.0, {}, {})
+        ngrams = set(character_ngrams(match_text))
         scores: Dict[str, float] = {}
         signals: Dict[str, List[str]] = {}
 
@@ -181,9 +195,6 @@ class LexicalLanguageRouter:
             overlap = ngrams & profile_ngrams
             if overlap:
                 score += min(len(overlap) * 0.08, 2.5)
-
-            if profile.code == "eng" and match_text.isascii():
-                score += 0.2
 
             scores[profile.code] = round(score, 4)
             signals[profile.code] = found
@@ -221,8 +232,8 @@ class LexicalLanguageRouter:
 
         if not 0.0 <= min_confidence <= 1.0:
             raise ValueError("min_confidence must be between 0 and 1.")
-        if min_score_margin < 0.0:
-            raise ValueError("min_score_margin must be non-negative.")
+        if not math.isfinite(min_score_margin) or min_score_margin < 0.0:
+            raise ValueError("min_score_margin must be finite and non-negative.")
 
         decision = self.route(text)
         margin = score_margin(decision.scores)

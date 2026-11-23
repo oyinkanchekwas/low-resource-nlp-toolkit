@@ -2,20 +2,27 @@
 
 from __future__ import annotations
 
+import html
+import math
+import re
 import unicodedata
 from dataclasses import dataclass, field
 from typing import Dict, List, Mapping, Sequence
 
-from .normalisation import JOINER_CHARS, normalise_text
+from .normalisation import JOINER_CHARS, URL_RE, USER_RE, normalise_text
 from .routing import LexicalLanguageRouter, score_margin
 
 AMBIGUOUS = "ambiguous"
 UNDETERMINED = "und"
+_CHARACTER_REFERENCE = re.compile(r"&(?:#[0-9]+;?|#[xX][0-9a-fA-F]+;?|[^\t\n\f <&#;]{1,32};?)")
 
 
 @dataclass(frozen=True)
 class TokenAudit:
-    """Routing evidence for one token."""
+    """Routing evidence for one token.
+
+    Confidence is the router's relative score, not a calibrated probability.
+    """
 
     text: str
     normalised: str
@@ -51,7 +58,10 @@ class TokenAudit:
 
 @dataclass(frozen=True)
 class LanguageSpan:
-    """A contiguous run of tokens with the same accepted route."""
+    """A contiguous run of tokens with the same accepted route.
+
+    Mean confidence averages relative token scores; it is not a probability.
+    """
 
     language_code: str
     language_name: str
@@ -108,6 +118,19 @@ class CodeSwitchAudit:
             "spans": [span.to_dict() for span in self.spans],
         }
 
+    def to_aggregate_dict(self) -> Dict[str, object]:
+        """Return counts and ratios without the input or token records.
+
+        Aggregate values can still reveal information about small inputs.
+        """
+        return {
+            "token_count": self.token_count,
+            "routed_token_count": self.routed_token_count,
+            "accepted_token_count": self.accepted_token_count,
+            "language_count": len(self.language_mix),
+            "code_switch_ratio": self.code_switch_ratio,
+        }
+
 
 def iter_word_offsets(text: str) -> List[tuple[str, int, int]]:
     """Return Unicode-aware word tokens with offsets in the original text."""
@@ -152,6 +175,60 @@ def iter_word_offsets(text: str) -> List[tuple[str, int, int]]:
     return tokens
 
 
+def _ignored_text_ranges(text: str) -> List[tuple[int, int]]:
+    """Locate links and usernames in the original text after HTML decoding."""
+    decoded: List[str] = []
+    offsets: List[tuple[int, int]] = []
+    nonword_references: List[tuple[int, int]] = []
+    position = 0
+
+    def append_literal(value: str, start: int) -> None:
+        decoded.extend(value)
+        offsets.extend((start + i, start + i + 1) for i in range(len(value)))
+
+    # Decoded characters retain their source interval so audit offsets stay in
+    # the original input even when an HTML reference changes length.
+    for match in _CHARACTER_REFERENCE.finditer(text):
+        append_literal(text[position : match.start()], position)
+        original = match.group()
+        replacement = html.unescape(original)
+        if replacement == original:
+            append_literal(original, match.start())
+        else:
+            decoded.extend(replacement)
+            offsets.extend([(match.start(), match.end())] * len(replacement))
+            if not any(unicodedata.category(char)[0] in {"L", "M"} for char in replacement):
+                nonword_references.append(match.span())
+        position = match.end()
+    append_literal(text[position:], position)
+    value = "".join(decoded)
+    matches = [(match.start(), match.end()) for match in URL_RE.finditer(value)]
+    for match in USER_RE.finditer(value):
+        start, end = match.span()
+        if start and unicodedata.category(value[start - 1]).startswith("M"):
+            cluster_start = start - 1
+            while cluster_start and unicodedata.category(value[cluster_start]).startswith("M"):
+                cluster_start -= 1
+            preceding = unicodedata.normalize("NFC", value[cluster_start:start])
+            if preceding and re.match(r"\w", preceding[-1]):
+                continue
+        while end < len(value) and (
+            re.match(r"\w", value[end]) or unicodedata.category(value[end]).startswith("M")
+        ):
+            end += 1
+        matches.append((start, end))
+    ranges = sorted(
+        nonword_references + [(offsets[start][0], offsets[end - 1][1]) for start, end in matches]
+    )
+    merged: List[tuple[int, int]] = []
+    for start, end in ranges:
+        if merged and start <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+        else:
+            merged.append((start, end))
+    return merged
+
+
 def _language_name(router: LexicalLanguageRouter, code: str) -> str:
     if code == AMBIGUOUS:
         return "Ambiguous"
@@ -159,6 +236,13 @@ def _language_name(router: LexicalLanguageRouter, code: str) -> str:
         return "Undetermined"
     profile = router.profile_by_code.get(code)
     return profile.name if profile else code
+
+
+def _validate_thresholds(min_confidence: float, min_score_margin: float) -> None:
+    if not 0.0 <= min_confidence <= 1.0:
+        raise ValueError("min_confidence must be between 0 and 1.")
+    if not math.isfinite(min_score_margin) or min_score_margin < 0.0:
+        raise ValueError("min_score_margin must be finite and non-negative.")
 
 
 def audit_token(
@@ -172,6 +256,7 @@ def audit_token(
 ) -> TokenAudit:
     """Audit one token and decide whether its route is strong enough to use."""
 
+    _validate_thresholds(min_confidence, min_score_margin)
     decision = router.route(token)
     margin = score_margin(decision.scores)
     normalised = normalise_text(token)
@@ -199,7 +284,9 @@ def audit_token(
     )
 
 
-def _build_spans(text: str, tokens: Sequence[TokenAudit]) -> List[LanguageSpan]:
+def _build_spans(
+    text: str, tokens: Sequence[TokenAudit], ignored_ranges: Sequence[tuple[int, int]] = ()
+) -> List[LanguageSpan]:
     spans: List[LanguageSpan] = []
     if not tokens:
         return spans
@@ -207,6 +294,7 @@ def _build_spans(text: str, tokens: Sequence[TokenAudit]) -> List[LanguageSpan]:
     current_code = tokens[0].accepted_language_code
     current_name = tokens[0].accepted_language_name
     current_tokens: List[TokenAudit] = []
+    range_index = 0
 
     def flush() -> None:
         if not current_tokens:
@@ -227,7 +315,19 @@ def _build_spans(text: str, tokens: Sequence[TokenAudit]) -> List[LanguageSpan]:
         )
 
     for token in tokens:
-        if token.accepted_language_code != current_code:
+        if current_tokens:
+            while (
+                range_index < len(ignored_ranges)
+                and ignored_ranges[range_index][1] <= current_tokens[-1].end
+            ):
+                range_index += 1
+        separated = (
+            current_tokens
+            and range_index < len(ignored_ranges)
+            and ignored_ranges[range_index][0] < token.start
+            and ignored_ranges[range_index][1] > current_tokens[-1].end
+        )
+        if token.accepted_language_code != current_code or separated:
             flush()
             current_code = token.accepted_language_code
             current_name = token.accepted_language_name
@@ -284,10 +384,22 @@ def audit_code_switching(
 
     Use the audit for corpus triage, never identity inference. It favours
     abstention when token-level evidence is weak or confusable.
+    Confidence values are relative routing scores, not calibrated probabilities.
+    Links, usernames, and non-word HTML character references are excluded from
+    token evidence; the original text is retained in the report.
     """
 
-    active_router = router or LexicalLanguageRouter.default()
-    token_offsets = iter_word_offsets(text)
+    _validate_thresholds(min_confidence, min_score_margin)
+    if router is None:
+        raise ValueError("Supply a router configured with explicit language profiles.")
+    active_router = router
+    ignored_ranges = _ignored_text_ranges(text or "")
+    masked = list(text or "")
+    for begin, end in ignored_ranges:
+        masked[begin:end] = " " * (end - begin)
+    token_offsets = [
+        (text[start:end], start, end) for _, start, end in iter_word_offsets("".join(masked))
+    ]
     tokens = [
         audit_token(
             token,
@@ -326,6 +438,8 @@ def audit_code_switching(
         language_mix=language_mix,
         code_switch_ratio=code_switch_ratio,
     )
+    if not tokens and ignored_ranges:
+        warnings = ["no_auditable_tokens"]
 
     return CodeSwitchAudit(
         text=text,
@@ -338,5 +452,5 @@ def audit_code_switching(
         code_switch_ratio=code_switch_ratio,
         warnings=tuple(warnings),
         tokens=tuple(tokens),
-        spans=tuple(_build_spans(text, tokens)),
+        spans=tuple(_build_spans(text, tokens, ignored_ranges)),
     )

@@ -215,7 +215,10 @@ def choose_policy(
     for confidence in confidences:
         for margin in margins:
             report = policy_report(predictions, confidence, margin)
-            if float(report["selective_accuracy"]) >= target_accuracy:
+            if (
+                report["selective_accuracy"] is not None
+                and float(report["selective_accuracy"]) >= target_accuracy
+            ):
                 candidates.append(report)
     if not candidates:
         raise ValueError(f"No policy reached development accuracy {target_accuracy:.3f}.")
@@ -230,11 +233,13 @@ def choose_policy(
     )
 
 
-def wilson_interval(successes: int, total: int, z: float = 1.96) -> list[float]:
+def wilson_interval(successes: int, total: int, z: float = 1.96) -> list[float] | None:
     """Return a two-sided Wilson interval for a binomial proportion."""
 
-    if total <= 0:
-        return [0.0, 0.0]
+    if total == 0 and successes == 0:
+        return None
+    if total <= 0 or successes < 0 or successes > total:
+        raise ValueError("Successes must be between zero and the total.")
     proportion = successes / total
     denominator = 1.0 + (z * z / total)
     centre = (proportion + z * z / (2 * total)) / denominator
@@ -351,6 +356,8 @@ def build_report(
 
 
 def _percentage(value: object) -> str:
+    if value is None:
+        return "N/A"
     return f"{100 * float(value):.2f}%"
 
 
@@ -392,6 +399,8 @@ def render_markdown(report: Mapping[str, object]) -> str:
         f"- Source revision: `{str(dataset['revision'])[:12]}`",
         f"- Licence: {dataset['licence']}",
         f"- Task paper: [SemEval-2023 Task 12]({dataset['paper']})",
+        "- Dataset paper: [AfriSenti](https://aclanthology.org/2023.emnlp-main.862/)",
+        "- Related datasets: [NaijaSenti](https://aclanthology.org/2022.lrec-1.63/) and [ASAB](https://aclanthology.org/2020.coling-main.91/)",
         "- Source tweets are downloaded locally and hash-checked. They are not committed here.",
         "",
         "## Policy selection",
@@ -504,13 +513,17 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    parser.add_argument("--profiles", required=True, type=Path)
+    args = parser.parse_args(argv)
     if not 0.0 < args.target_accuracy <= 1.0:
         raise ValueError("target-accuracy must be greater than 0 and no more than 1.")
 
     manifest = read_manifest()
     prepare_data(manifest, args.data_dir, args.download)
-    router = LexicalLanguageRouter.default()
+    from low_resource_nlp.routing import load_profiles
+
+    router = LexicalLanguageRouter(load_profiles(args.profiles))
     development = load_predictions(manifest, args.data_dir, "development", router)
     test = load_predictions(manifest, args.data_dir, "test", router)
     report = build_report(manifest, development, test, args.target_accuracy)

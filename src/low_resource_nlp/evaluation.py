@@ -125,6 +125,8 @@ def selective_classification_report(
 
     if len(y_true) != len(y_pred) or len(y_true) != len(accepted):
         raise ValueError("y_true, y_pred and accepted must have the same length.")
+    if any(type(value) is not bool for value in accepted):
+        raise ValueError("accepted must contain boolean values.")
 
     label_order = ordered_labels(y_true, y_pred, labels)
     accepted_pairs = [
@@ -157,8 +159,8 @@ def selective_classification_report(
         per_label[label] = {
             "support": support,
             "accepted": len(selected),
-            "coverage": round(safe_divide(len(selected), support), 4),
-            "selective_accuracy": round(safe_divide(selected_correct, len(selected)), 4),
+            "coverage": round(len(selected) / support, 4) if support else None,
+            "selective_accuracy": round(selected_correct / len(selected), 4) if selected else None,
         }
 
     selective_accuracy = safe_divide(correct_count, accepted_count)
@@ -166,12 +168,12 @@ def selective_classification_report(
         "total": total,
         "accepted": accepted_count,
         "abstained": total - accepted_count,
-        "coverage": round(safe_divide(accepted_count, total), 4),
-        "selective_accuracy": round(selective_accuracy, 4),
+        "coverage": round(accepted_count / total, 4) if total else None,
+        "selective_accuracy": round(selective_accuracy, 4) if accepted_count else None,
         "selective_risk": round(1.0 - selective_accuracy, 4) if accepted_count else None,
-        "overall_accuracy": round(safe_divide(correct_count, total), 4),
-        "accepted_macro_f1": accepted_report["macro_f1"],
-        "accepted_weighted_f1": accepted_report["weighted_f1"],
+        "overall_accuracy": round(correct_count / total, 4) if total else None,
+        "accepted_macro_f1": accepted_report["macro_f1"] if accepted_count else None,
+        "accepted_weighted_f1": accepted_report["weighted_f1"] if accepted_count else None,
         "labels": per_label,
         "confusion_matrix": accepted_report["confusion_matrix"],
     }
