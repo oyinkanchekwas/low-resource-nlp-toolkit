@@ -1,31 +1,17 @@
 # Technical scope
 
-## Package modules
+The toolkit operates on text supplied by the caller. Normalisation preserves diacritics by default. Routing compares lexical and character evidence in caller-supplied profiles, with configurable abstention thresholds.
 
-- Deterministic normalisation and tokenisation.
-- Canonical emotion-label and valence-arousal mapping.
-- Lexical and script-aware language routing.
-- Selective routing with explicit abstention reasons.
-- Token-level code-switch audits.
-- Classification, confusion-matrix and coverage-aware evaluation.
-- CSV and JSONL readers for small experiments.
+Scores are relative to the supplied routes and evidence. They are not calibrated probabilities. Profile construction, language coverage, code-mixing, and domain affect the interpretation of a route. A corpus-language label does not establish the language of every token or the correct destination in an application.
 
-The core package has no third-party runtime dependencies. This keeps its decisions inspectable and makes it practical in teaching environments or as a baseline before heavier models are introduced.
+Token audits return evidence spans and original character offsets. The full output includes source text. Aggregate output contains counts and a code-switch ratio without text or profile identifiers.
 
-## Evaluation
+Emotion mappings require explicit category aliases or supplied dimensional coordinates. Numerical ratings need finite scale bounds, a source description, and an annotation perspective. Their interpretation depends on the source instrument and population.
 
-The AfriSenti benchmark measures corpus-language routing for Hausa, Igbo, Nigerian Pidgin, Swahili and Yoruba. Thresholds are selected on development data and applied unchanged to the test split. The benchmark also repeats each test prediction after diacritic removal, allowing the effect of that normalisation choice to be measured on paired examples.
+The package contains no dataset, model weights, or bundled language lexicon. The mechanical examples test software operations. Language-identification performance requires a separate evaluation with suitable reference labels.
 
-AfriSenti labels apply to the source corpus; they do not label every token in a tweet. Because the data includes code-mixing, the report does not claim word-level language-identification accuracy.
+## Compatibility
 
-## Data and privacy
+Routing and auditing require explicit profiles in version 0.4.0.dev1. The earlier automatic category aliases, coordinates, and category-list constant have been removed. Existing callers need to supply the relevant configuration.
 
-- No private datasets are bundled.
-- No model weights are committed.
-- No credentials are required.
-- Benchmark source files are downloaded from a pinned public revision and checked against recorded hashes.
-- Reports contain aggregate measurements and omit source tweets.
-
-## Adding a language or benchmark
-
-Language profiles should include tests that show both strong evidence and ambiguous cases. Benchmark additions need a public source, a redistribution-compatible licence, fixed input hashes, a documented split policy and a clear account of limitations.
+Historical version 0.3.0 benchmark figures remain associated with that version. New profile configurations need their own evaluation.

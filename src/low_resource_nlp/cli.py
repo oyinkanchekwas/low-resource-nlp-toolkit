@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from dataclasses import asdict
 from pathlib import Path
 from typing import List
 
@@ -11,9 +12,9 @@ from ._version import __version__
 from .audit import audit_code_switching
 from .datasets import iter_text_records
 from .evaluation import classification_report
-from .labels import label_to_valence_arousal
+from .labels import RatingScale, label_to_valence_arousal
 from .normalisation import normalise_text
-from .routing import LexicalLanguageRouter
+from .routing import LexicalLanguageRouter, load_profiles
 
 
 def _print_json(value: object) -> None:
@@ -34,16 +35,23 @@ def build_parser() -> argparse.ArgumentParser:
 
     route = subcommands.add_parser("route", help="Route a text string to a language profile.")
     route.add_argument("text")
+    route.add_argument("--profiles", required=True, type=Path)
     route.add_argument("--min-confidence", type=float, default=0.0)
     route.add_argument("--min-score-margin", type=float, default=0.0)
 
     audit = subcommands.add_parser("audit", help="Audit language evidence across a text string.")
     audit.add_argument("text")
+    audit.add_argument("--profiles", required=True, type=Path)
     audit.add_argument("--min-confidence", type=float, default=0.55)
     audit.add_argument("--min-score-margin", type=float, default=0.75)
 
-    label = subcommands.add_parser("label", help="Map an emotion label to the canonical taxonomy.")
+    label = subcommands.add_parser("label", help="Normalise an emotion label or read ratings.")
     label.add_argument("label")
+    label.add_argument("--scale-min", type=float)
+    label.add_argument("--scale-max", type=float)
+    label.add_argument("--source")
+    label.add_argument("--perspective")
+    label.add_argument("--source-version")
 
     evaluate = subcommands.add_parser(
         "evaluate", help="Evaluate a CSV/JSONL file with truth and prediction fields."
@@ -65,8 +73,19 @@ def main(argv: List[str] | None = None) -> int:
         print(normalise_text(args.text))
         return 0
 
+    if args.command in {"route", "audit"}:
+        try:
+            router = LexicalLanguageRouter(load_profiles(args.profiles))
+            router.route_selectively(
+                "",
+                min_confidence=args.min_confidence,
+                min_score_margin=args.min_score_margin,
+            )
+        except (OSError, TypeError, ValueError) as exc:
+            parser.error(str(exc))
+
     if args.command == "route":
-        result = LexicalLanguageRouter.default().route_selectively(
+        result = router.route_selectively(
             args.text,
             min_confidence=args.min_confidence,
             min_score_margin=args.min_score_margin,
@@ -91,6 +110,7 @@ def main(argv: List[str] | None = None) -> int:
     if args.command == "audit":
         report = audit_code_switching(
             args.text,
+            router=router,
             min_confidence=args.min_confidence,
             min_score_margin=args.min_score_margin,
         )
@@ -98,13 +118,22 @@ def main(argv: List[str] | None = None) -> int:
         return 0
 
     if args.command == "label":
-        mapping = label_to_valence_arousal(args.label)
+        metadata = (args.scale_min, args.scale_max, args.source, args.perspective)
+        try:
+            if any(value is not None for value in metadata) or args.source_version is not None:
+                scale = RatingScale(*metadata, version=args.source_version)
+            else:
+                scale = None
+            mapping = label_to_valence_arousal(args.label, scale=scale)
+        except (TypeError, ValueError) as exc:
+            parser.error(str(exc))
         _print_json(
             {
                 "original": mapping.original,
                 "canonical": mapping.canonical,
                 "valence": mapping.valence,
                 "arousal": mapping.arousal,
+                "scale": asdict(mapping.scale) if mapping.scale is not None else None,
             }
         )
         return 0

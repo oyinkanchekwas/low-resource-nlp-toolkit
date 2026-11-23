@@ -1,20 +1,12 @@
 site_name: Low-Resource NLP Toolkit
-site_description: Research-facing utilities for low-resource African language NLP.
-site_url: https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/
-repo_url: https://github.com/oyinkanchekwas/low-resource-nlp-toolkit
-repo_name: oyinkanchekwas/low-resource-nlp-toolkit
-edit_uri: edit/main/docs/
+site_description: Multilingual text preparation and evaluation.
 theme:
   name: mkdocs
 nav:
   - Home: index.md
   - Corpus Tutorial: tutorial.md
-  - AfriSenti Benchmark: benchmark.md
+  - Emotion Labels: labels.md
+  - Historical Benchmark: benchmark.md
   - Technical Scope: scope.md
-  - Release Notes:
-      - Version 0.3.0: release_notes_v0_3.md
-      - Version 0.2.1: release_notes_v0_2_1.md
-      - Version 0.2.0: release_notes_v0_2.md
-      - Version 0.1.0: release_notes_v0_1.md
   - Model Card Template: model_card_template.md
   - Data Statement Template: data_statement_template.md

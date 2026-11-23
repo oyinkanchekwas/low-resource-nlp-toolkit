@@ -1,38 +1,17 @@
 # Contributing
 
-This project is early-stage, but the contribution bar is intentionally practical: changes should make low-resource NLP work easier to inspect, reproduce, or document.
+Include tests for changed behaviour and enough detail to reproduce the result.
 
-## Contribution Areas
+## Checks
 
-- Small routing or normalisation fixtures for public, well-described text examples.
-- Tests that expose dialect, code-switching, or annotation edge cases.
-- Documentation improvements for responsible dataset release.
-- Evaluation utilities that remain deterministic and dependency-light.
-- Optional integrations with heavier NLP libraries, provided the core package still works without them.
+Run `make check`, `ruff check .`, and `ruff format --check .` before submitting a change. Documentation changes should also pass `mkdocs build --strict`.
 
-## Before Opening a Pull Request
+## Profiles and data
 
-Run the local checks:
+Routing profiles must identify their source and use material that can be shared under the applicable terms. Software examples should use mechanical fixtures or source-qualified text.
 
-```bash
-make check
-```
+Keep private datasets, credentials, model weights, and restricted records out of contributions. Describe dataset permissions and attribution where they apply.
 
-If `make` is unavailable:
+## Research results
 
-```bash
-python3 scripts/quality_gate.py
-PYTHONPATH=src python3 -m unittest discover -s tests
-```
-
-## Data and Privacy
-
-Do not commit private datasets, scraped personal data, credentials, API tokens, model weights, or files that cannot be redistributed. For data-related contributions, include the source, licence, collection context, intended use, and known limitations.
-
-## Language Coverage
-
-Language and dialect support should not be presented as identity detection. When adding examples, prefer clear, sourced, public examples and document uncertainty where the routing signal is ambiguous.
-
-## Review Standard
-
-Small pull requests with clear reasoning are easiest to review. The most useful explanation is usually why a design choice improves reliability, transparency, or responsible use.
+State the reference labels, evaluation unit, and split used for reported results. Account for code-mixing and repeated records. Changes to profiles or thresholds need their own evaluation; historical results remain associated with their original configuration.

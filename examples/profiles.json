@@ -1,0 +1,21 @@
+{
+  "source": "Mechanical demonstration vocabulary; route codes a and b are test identifiers",
+  "profiles": [
+    {
+      "code": "a",
+      "name": "Example A",
+      "keywords": [
+        "alpha",
+        "amber"
+      ]
+    },
+    {
+      "code": "b",
+      "name": "Example B",
+      "keywords": [
+        "beta",
+        "bravo"
+      ]
+    }
+  ]
+}

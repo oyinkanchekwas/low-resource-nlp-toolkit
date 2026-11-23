@@ -1,22 +1,19 @@
-"""Audit language evidence in short code-switched text."""
+"""Report aggregate token evidence using supplied profiles."""
 
-from low_resource_nlp import audit_code_switching
+import argparse
+import json
+
+from low_resource_nlp import LexicalLanguageRouter, audit_code_switching, load_profiles
 
 
 def main() -> None:
-    samples = [
-        "abeg make una check this model output",
-        "Ẹ káàrọ̀, this result looks useful",
-        "sannu ina lafiya, please review the data",
-    ]
-
-    for text in samples:
-        report = audit_code_switching(text)
-        print(f"\n{text}")
-        print(f"dominant={report.dominant_language_code} mix={dict(report.language_mix)}")
-        print(f"warnings={list(report.warnings)}")
-        for span in report.spans:
-            print(f"  {span.language_code}\t{span.text}")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("text")
+    parser.add_argument("--profiles", required=True)
+    args = parser.parse_args()
+    router = LexicalLanguageRouter(load_profiles(args.profiles))
+    report = audit_code_switching(args.text, router=router)
+    print(json.dumps(report.to_aggregate_dict()))
 
 
 if __name__ == "__main__":

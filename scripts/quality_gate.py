@@ -18,6 +18,7 @@ TEXT_SUFFIXES = {
     ".yml",
 }
 SKIP_PARTS = {
+    ".benchmark-data",
     ".git",
     ".mypy_cache",
     ".pytest_cache",
@@ -63,7 +64,11 @@ ALLOWED_LINE_SNIPPETS = {
 
 
 def is_scannable(path: Path) -> bool:
-    if any(part in SKIP_PARTS for part in path.parts):
+    try:
+        parts = path.relative_to(ROOT).parts
+    except ValueError:
+        parts = path.parts
+    if any(part in SKIP_PARTS for part in parts):
         return False
     if path.name == "LICENSE":
         return False

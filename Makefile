@@ -9,7 +9,7 @@ quality:
 check: quality test
 
 benchmark:
-	PYTHONPATH=src python3 benchmarks/afrisenti/run_benchmark.py --download
+	PYTHONPATH=src python3 benchmarks/afrisenti/run_benchmark.py --profiles "$(PROFILES)"
 
 docs:
 	mkdocs build --strict

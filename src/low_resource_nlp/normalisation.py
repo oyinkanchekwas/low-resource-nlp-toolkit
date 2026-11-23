@@ -32,6 +32,8 @@ class NormalisationConfig:
     unpack_hashtags: bool = True
     reduce_repeated_chars: bool = True
     repeated_char_limit: int = 2
+    url_replacement: str = " <URL> "
+    user_replacement: str = " <USER> "
 
 
 def strip_diacritics(text: str) -> str:
@@ -57,9 +59,9 @@ def normalise_text(text: str, config: NormalisationConfig | None = None) -> str:
     value = unicodedata.normalize(cfg.normalise_unicode, value)
 
     if cfg.replace_urls:
-        value = URL_RE.sub(" <URL> ", value)
+        value = URL_RE.sub(lambda _: cfg.url_replacement, value)
     if cfg.replace_users:
-        value = USER_RE.sub(" <USER> ", value)
+        value = USER_RE.sub(lambda _: cfg.user_replacement, value)
     if cfg.unpack_hashtags:
         value = HASHTAG_RE.sub(split_hashtag, value)
     if cfg.reduce_repeated_chars:
