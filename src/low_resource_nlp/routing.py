@@ -32,6 +32,12 @@ class LanguageProfile:
     unique_chars: Tuple[str, ...] = ()
     aliases: Tuple[str, ...] = ()
 
+    def __post_init__(self) -> None:
+        for field_name in ("stopwords", "keywords", "unique_chars", "aliases"):
+            values = getattr(self, field_name)
+            if isinstance(values, list):
+                object.__setattr__(self, field_name, tuple(values))
+
 
 @dataclass(frozen=True)
 class RouteDecision:
@@ -146,9 +152,13 @@ class LexicalLanguageRouter:
             for profile in self.profiles
         }
         self._char_index = {
-            profile.code: {normalise_for_matching(char) for char in profile.unique_chars}
+            profile.code: {
+                normalise_text(char, _ROUTING_NORMALISATION) for char in profile.unique_chars
+            }
             for profile in self.profiles
         }
+        if any("" in values for values in self._char_index.values()):
+            raise ValueError("Character evidence must remain non-empty after normalisation.")
 
     @classmethod
     def default(cls) -> "LexicalLanguageRouter":
@@ -177,7 +187,9 @@ class LexicalLanguageRouter:
 
             stop_hits = sorted(token_set & self._stopword_index[profile.code])
             keyword_hits = sorted(token_set & self._keyword_index[profile.code])
-            char_hits = sorted(char for char in profile.unique_chars if char in normalised)
+            char_hits = sorted(
+                char for char in self._char_index[profile.code] if char in normalised
+            )
 
             if stop_hits:
                 score += len(stop_hits) * 1.0

@@ -7,7 +7,9 @@ import csv
 import hashlib
 import json
 import math
+import re
 import shutil
+import tempfile
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
@@ -19,7 +21,7 @@ from low_resource_nlp.evaluation import (
     selective_classification_report,
 )
 from low_resource_nlp.normalisation import strip_diacritics
-from low_resource_nlp.routing import LexicalLanguageRouter, score_margin
+from low_resource_nlp.routing import LexicalLanguageRouter, load_profiles, score_margin
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = Path(__file__).with_name("manifest.json")
@@ -330,15 +332,20 @@ def build_report(
     development: Sequence[RoutingPrediction],
     test: Sequence[RoutingPrediction],
     target_accuracy: float,
+    *,
+    profile_sha256: str,
 ) -> Mapping[str, object]:
     """Build the complete aggregate benchmark report."""
 
+    if not re.fullmatch(r"[0-9a-f]{64}", profile_sha256):
+        raise ValueError("A SHA-256 digest of the profile file is required.")
     selected = choose_policy(development, target_accuracy)
     confidence = float(selected["min_confidence"])
     margin = float(selected["min_score_margin"])
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "toolkit_version": __version__,
+        "profiles": {"sha256": profile_sha256},
         "dataset": manifest["dataset"],
         "task": "corpus-language routing",
         "languages": list(LANGUAGES),
@@ -389,14 +396,16 @@ def render_markdown(report: Mapping[str, object]) -> str:
         "",
         (
             "This benchmark measures corpus-language routing on the AfriSenti development and "
-            "test sets for Hausa, Igbo, Nigerian Pidgin, Swahili and Yoruba. The router is "
-            "dependency-light and uses inspectable lexical, character and script evidence."
+            "test sets for Hausa, Igbo, Nigerian Pidgin, Swahili, and Yoruba. The router is "
+            "dependency-light and uses inspectable lexical, character, and script evidence."
         ),
         "",
         "## Data",
         "",
         f"- Dataset: [{dataset['name']}]({dataset['repository']})",
         f"- Source revision: `{str(dataset['revision'])[:12]}`",
+        f"- Toolkit version: `{report['toolkit_version']}`",
+        f"- Profile file SHA-256: `{report['profiles']['sha256']}`",
         f"- Licence: {dataset['licence']}",
         f"- Task paper: [SemEval-2023 Task 12]({dataset['paper']})",
         "- Dataset paper: [AfriSenti](https://aclanthology.org/2023.emnlp-main.862/)",
@@ -465,9 +474,8 @@ def render_markdown(report: Mapping[str, object]) -> str:
             "",
             (
                 "The selected policy trades coverage for fewer accepted errors. Its score margin "
-                "is a ranking gap, not a calibrated probability. The held-out result is therefore "
-                "a measurement of this fixed router on this corpus, not a general accuracy "
-                "guarantee."
+                "is a ranking gap. Scores are not calibrated probabilities. The held-out result "
+                "measures this fixed router on this corpus."
             ),
             "",
             (
@@ -479,8 +487,16 @@ def render_markdown(report: Mapping[str, object]) -> str:
             "",
             "## Reproduce",
             "",
+            "Use a profile file matching the recorded SHA-256 digest and the pinned dataset files.",
+            "",
             "```bash",
-            "PYTHONPATH=src python3 benchmarks/afrisenti/run_benchmark.py --download",
+            (
+                "PYTHONPATH=src python3 benchmarks/afrisenti/run_benchmark.py "
+                "--profiles profiles.json --data-dir .benchmark-data/afrisenti-5aec3cf "
+                f"--target-accuracy {float(development['selection_target_accuracy'])} "
+                "--json-output benchmark-output/report.json "
+                "--markdown-output benchmark-output/report.md"
+            ),
             "```",
             "",
             "The JSON report contains confidence intervals, per-language coverage and confusion matrices.",
@@ -492,6 +508,7 @@ def render_markdown(report: Mapping[str, object]) -> str:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run the pinned AfriSenti routing benchmark.")
+    parser.add_argument("--profiles", required=True, type=Path)
     parser.add_argument(
         "--data-dir",
         type=Path,
@@ -502,45 +519,66 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--json-output",
         type=Path,
-        default=ROOT / "reports" / "afrisenti-routing.json",
+        help="New JSON output file; defaults to a separate benchmark-run directory.",
     )
     parser.add_argument(
         "--markdown-output",
         type=Path,
-        default=ROOT / "docs" / "benchmark.md",
+        help="New Markdown output file; defaults to a separate benchmark-run directory.",
     )
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
-    parser.add_argument("--profiles", required=True, type=Path)
     args = parser.parse_args(argv)
     if not 0.0 < args.target_accuracy <= 1.0:
         raise ValueError("target-accuracy must be greater than 0 and no more than 1.")
 
+    for output in (args.json_output, args.markdown_output):
+        if output is not None and output.exists():
+            parser.error("Output files must be new files.")
+    if (
+        args.json_output is not None
+        and args.markdown_output is not None
+        and args.json_output.resolve() == args.markdown_output.resolve()
+    ):
+        parser.error("JSON and Markdown outputs must use distinct files.")
+    profile_sha256 = sha256_file(args.profiles)
+    router = LexicalLanguageRouter(load_profiles(args.profiles))
+    if profile_sha256 != sha256_file(args.profiles):
+        raise ValueError("The profile file changed while it was being loaded.")
     manifest = read_manifest()
     prepare_data(manifest, args.data_dir, args.download)
-    from low_resource_nlp.routing import load_profiles
-
-    router = LexicalLanguageRouter(load_profiles(args.profiles))
     development = load_predictions(manifest, args.data_dir, "development", router)
     test = load_predictions(manifest, args.data_dir, "test", router)
-    report = build_report(manifest, development, test, args.target_accuracy)
+    report = build_report(
+        manifest, development, test, args.target_accuracy, profile_sha256=profile_sha256
+    )
 
+    if args.json_output is None or args.markdown_output is None:
+        output_root = ROOT / ".benchmark-data" / "afrisenti-runs"
+        output_root.mkdir(parents=True, exist_ok=True)
+        output_directory = Path(tempfile.mkdtemp(prefix="run-", dir=output_root))
+        if args.json_output is None:
+            args.json_output = output_directory / "report.json"
+        if args.markdown_output is None:
+            args.markdown_output = output_directory / "report.md"
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.markdown_output.parent.mkdir(parents=True, exist_ok=True)
-    args.json_output.write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    args.markdown_output.write_text(render_markdown(report), encoding="utf-8")
+    rendered = render_markdown(report)
+    with args.json_output.open("x", encoding="utf-8") as stream:
+        stream.write(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    with args.markdown_output.open("x", encoding="utf-8") as stream:
+        stream.write(rendered)
 
     selected = report["test"]["selected_policy"]
     print(
-        f"test coverage={selected['coverage']:.4f} "
-        f"selective_accuracy={selected['selective_accuracy']:.4f}"
+        f"test coverage={_percentage(selected['coverage'])} "
+        f"selective_accuracy={_percentage(selected['selective_accuracy'])}"
     )
+    print(f"JSON report: {args.json_output}")
+    print(f"Markdown report: {args.markdown_output}")
     return 0
 
 

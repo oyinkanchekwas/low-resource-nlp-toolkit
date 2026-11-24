@@ -93,6 +93,30 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(router.route("alpha amber").language_code, "a")
         self.assertEqual(router.route("beta bravo").language_code, "b")
 
+    def test_mixed_list_and_tuple_fields_are_snapshotted(self):
+        words = ["alpha"]
+        profile = LanguageProfile("a", "A", keywords=words, stopwords=("amber",))
+        words.append("beta")
+        self.assertEqual(profile.keywords, ("alpha",))
+        router = LexicalLanguageRouter([profile])
+        self.assertEqual(router.route("alpha amber").language_code, "a")
+        self.assertIsInstance(profile.stopwords, tuple)
+
+    def test_character_evidence_uses_nfc_and_lowercase(self):
+        upper = LexicalLanguageRouter(
+            [LanguageProfile("a", "A", unique_chars=("\u00c9", "e\u0301"))]
+        )
+        lower = LexicalLanguageRouter([LanguageProfile("a", "A", unique_chars=("\u00e9",))])
+        for text in ("\u00c9", "\u00e9", "E\u0301", "e\u0301"):
+            with self.subTest(text=text):
+                self.assertEqual(upper.route(text), lower.route(text))
+                self.assertEqual(upper.route(text).language_code, "a")
+        self.assertEqual(upper.route("e").language_code, "und")
+
+    def test_character_evidence_empty_after_normalisation_fails(self):
+        with self.assertRaises(ValueError):
+            LexicalLanguageRouter([LanguageProfile("a", "A", unique_chars=("@user",))])
+
 
 if __name__ == "__main__":
     unittest.main()
