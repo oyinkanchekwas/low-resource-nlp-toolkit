@@ -12,6 +12,6 @@ The examples use a small test vocabulary. Evaluate language identification with 
 
 ## Compatibility
 
-Language routing requires profiles in version 0.4.0.dev2. Set category aliases and dimensional coordinates through the corresponding function arguments. Update imports that used the removed category-list constant.
+Language routing requires profiles in version 0.4.0. Set category aliases and dimensional coordinates through the corresponding function arguments. Update imports that used the removed category-list constant.
 
 Historical version 0.3.0 benchmark figures remain associated with that version. New profile configurations need their own evaluation.

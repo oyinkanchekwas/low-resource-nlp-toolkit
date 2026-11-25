@@ -1,6 +1,6 @@
 # Historical AfriSenti benchmark
 
-The published routing figures concern [version 0.3.0](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/tree/v0.3.0). Its profile definitions and implementation differ from the configurable routing interface in version 0.4.0.dev2.
+The published routing figures concern [version 0.3.0](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/tree/v0.3.0). Its profile definitions and implementation differ from the configurable routing interface in version 0.4.0.
 
 The [original benchmark report](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/blob/v0.3.0/docs/benchmark.md) records the data revision, split, threshold selection, aggregate results, and uncertainty analysis.
 
