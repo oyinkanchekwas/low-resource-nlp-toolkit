@@ -8,6 +8,8 @@ authors:
 repository-code: "https://github.com/oyinkanchekwas/low-resource-nlp-toolkit"
 license: MIT
 version: "0.4.0"
+date-released: "2026-11-25"
+url: "https://pypi.org/project/low-resource-nlp-toolkit/0.4.0/"
 keywords:
   - low-resource-nlp
   - african-languages

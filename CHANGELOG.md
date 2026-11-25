@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 (Unreleased)
+## [0.4.0](https://pypi.org/project/low-resource-nlp-toolkit/0.4.0/) - 2026-11-25
 
 ### Changed
 
@@ -8,7 +8,7 @@
 - Add a JSON profile loader with configuration validation.
 - Remove the ASCII-only English score adjustment.
 - Remove the fixed emotion-category list and automatic label coordinates.
-- Add mechanical routing examples and migration guidance.
+- Add a sample profile file and update the routing examples for the new interface.
 - Keep emotion categories distinct unless a caller defines an alias mapping.
 - Accept dimensional ratings with a declared scale, source, and annotation perspective.
 - Validate finite rating values against the declared scale.
@@ -29,7 +29,7 @@
 
 ### Packaging
 
-- Require setuptools 77.0.3 or later for the licence metadata, with an exact-minimum backend build in CI.
+- Require setuptools 77.0.3 or later to build the package with its SPDX licence metadata.
 - Include benchmark files in the source distribution.
 
 ## 0.3.0 - 2026-08-07
