@@ -1,0 +1,47 @@
+name: Share your experience
+description: Tell me how the toolkit fits your work.
+title: "[Use]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Your post will be public under your GitHub username. Please use public examples or a short task description, and keep personal information, credentials, and private research material out of your response.
+  - type: textarea
+    id: task
+    attributes:
+      label: What are you working on?
+    validations:
+      required: true
+  - type: input
+    id: languages
+    attributes:
+      label: Languages or language varieties
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Toolkit version
+      placeholder: "0.4.0"
+    validations:
+      required: false
+  - type: textarea
+    id: experience
+    attributes:
+      label: Your experience
+      description: What worked well? What would make the toolkit more useful?
+    validations:
+      required: false
+  - type: input
+    id: project
+    attributes:
+      label: Public project link
+    validations:
+      required: false
+  - type: checkboxes
+    id: quote_permission
+    attributes:
+      label: Quoting your feedback
+      options:
+        - label: You may quote my response in project documentation with credit to my GitHub username.
+          required: false

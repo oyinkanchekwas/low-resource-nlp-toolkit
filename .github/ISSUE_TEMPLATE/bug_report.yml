@@ -34,5 +34,5 @@ body:
     attributes:
       label: Safety check
       options:
-        - label: This report does not include private data, credentials, or non-redistributable files.
+        - label: I have permission to share this material publicly and have removed private data and credentials.
           required: true

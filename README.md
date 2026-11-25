@@ -60,6 +60,10 @@ The `route` and `audit` commands take a `--profiles` path. In Python, construct 
 
 Earlier benchmark results concern version 0.3.0. See the [historical benchmark](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/benchmark/) for the original version and sources.
 
+## Feedback
+
+[Share your experience](https://github.com/oyinkanchekwas/low-resource-nlp-toolkit/issues/new?template=usage_feedback.yml). Tell me how you are using the toolkit and what would make it more useful.
+
 ## Checks
 
 ```bash
