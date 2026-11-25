@@ -2,7 +2,7 @@
 
 Python tools for multilingual text preparation, code-switching analysis, emotion labels, and classification evaluation.
 
-Development version: `0.4.0.dev2`.
+Version: `0.4.0`.
 
 ## Installation
 

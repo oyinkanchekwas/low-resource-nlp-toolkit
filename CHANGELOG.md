@@ -1,33 +1,35 @@
 # Changelog
 
-## 0.4.0.dev2
+## 0.4.0 (Unreleased)
 
-- Validate evaluation fields and require a non-empty evaluation set.
-- Snapshot profile sequences and normalise character evidence using NFC and lowercase.
-- Require setuptools 77.0.3 or later for the licence metadata.
-- Record the profile-file hash in benchmark reports and include it in reproduction instructions.
-- Write new benchmark output to separate directories and reject existing output files.
-
-## 0.4.0.dev1
+### Changed
 
 - Require language profiles for message-level and word-level routing.
 - Add a JSON profile loader with configuration validation.
 - Remove the ASCII-only English score adjustment.
 - Remove the fixed emotion-category list and automatic label coordinates.
 - Add mechanical routing examples and migration guidance.
-- Keep earlier benchmark results associated with version 0.3.0.
-
-## 0.4.0 (Unreleased)
-
 - Keep emotion categories distinct unless a caller defines an alias mapping.
 - Accept dimensional ratings with a declared scale, source, and annotation perspective.
 - Validate finite rating values against the declared scale.
-
-## 0.3.1 (Unreleased)
-
 - Exclude links and usernames from message-level and word-level matching.
+
+### Fixed
+
+- Validate evaluation fields and require a non-empty evaluation set.
+- Store profile sequences as tuples and normalise character evidence using NFC and lowercase.
 - Reject non-finite score-margin thresholds and non-boolean acceptance values.
 - Return undefined selective metrics and intervals when their denominators are zero.
+
+### Benchmarking
+
+- Record the profile-file hash and toolkit version in reports, with the required profile argument in reproduction commands.
+- Write new benchmark output to separate directories and reject existing output files.
+- Link the earlier benchmark results to version 0.3.0 and its original profiles.
+
+### Packaging
+
+- Require setuptools 77.0.3 or later for the licence metadata, with an exact-minimum backend build in CI.
 - Include benchmark files in the source distribution.
 
 ## 0.3.0 - 2026-08-07
