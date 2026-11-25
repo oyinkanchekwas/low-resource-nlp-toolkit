@@ -7,7 +7,7 @@ authors:
     given-names: "Oyinkansola"
 repository-code: "https://github.com/oyinkanchekwas/low-resource-nlp-toolkit"
 license: MIT
-version: "0.4.0.dev1"
+version: "0.4.0.dev2"
 keywords:
   - low-resource-nlp
   - african-languages

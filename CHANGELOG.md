@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0.dev2
+
+- Validate evaluation fields and require a non-empty evaluation set.
+- Snapshot profile sequences and normalise character evidence using NFC and lowercase.
+- Require setuptools 77.0.3 or later for the licence metadata.
+- Record the profile-file hash in benchmark reports and include it in reproduction instructions.
+- Write new benchmark output to separate directories and reject existing output files.
+
 ## 0.4.0.dev1
 
 - Require caller-supplied profiles for routing and token audits.

@@ -12,6 +12,6 @@ The package contains no dataset, model weights, or bundled language lexicon. The
 
 ## Compatibility
 
-Routing and auditing require explicit profiles in version 0.4.0.dev1. The earlier automatic category aliases, coordinates, and category-list constant have been removed. Existing callers need to supply the relevant configuration.
+Routing and auditing require explicit profiles in version 0.4.0.dev2. The earlier automatic category aliases, coordinates, and category-list constant have been removed. Existing callers need to supply the relevant configuration.
 
 Historical version 0.3.0 benchmark figures remain associated with that version. New profile configurations need their own evaluation.

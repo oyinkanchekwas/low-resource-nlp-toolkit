@@ -2,7 +2,7 @@
 
 Python utilities for multilingual text preparation and evaluation. The package provides Unicode-aware normalisation, configurable lexical routing, token-level evidence audits, emotion-label mappings, and classification metrics.
 
-Development version: `0.4.0.dev1`.
+Development version: `0.4.0.dev2`.
 
 ## Installation
 
@@ -51,6 +51,8 @@ Category names remain distinct unless a caller provides an explicit mapping. Dim
 ## Evaluation
 
 `classification_report` reports class-level metrics and a confusion matrix. `selective_classification_report` reports coverage and accuracy among accepted records, with undefined values represented explicitly. The [corpus tutorial](docs/tutorial.md) describes routing a CSV or JSONL file.
+
+The `evaluate` command requires a non-empty CSV or JSONL file with `label` and `prediction` fields. Use `--truth-field` and `--prediction-field` for other column names. Missing, null, blank, structured, or non-finite labels are rejected before scoring; numeric zero is a valid label.
 
 ## Migration
 

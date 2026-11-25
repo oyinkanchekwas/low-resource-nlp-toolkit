@@ -16,6 +16,8 @@ The source distribution includes this configuration at `examples/profiles.json`.
 
 Each profile requires `code` and `name`. Evidence fields are `keywords`, `stopwords`, and `unique_chars`, each a list of strings. At least one evidence field must be populated. Codes must be distinct; `und` and `ambiguous` are reserved for unassigned outcomes. A source description records the material used to construct the profiles; it does not establish permission to redistribute that material.
 
+The Python API accepts list or tuple evidence fields and stores an immutable snapshot. Character evidence uses the same NFC and lowercase normalisation as the input, with diacritics preserved. Equivalent character entries contribute one signal.
+
 ## CSV and JSONL input
 
 This script reads a file with a `text` column or field and an optional `lang` field. It writes routing outcomes without copying the input text.

@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from dataclasses import asdict
 from pathlib import Path
 from typing import List
 
 from ._version import __version__
 from .audit import audit_code_switching
-from .datasets import iter_text_records
+from .datasets import iter_csv, iter_jsonl
 from .evaluation import classification_report
 from .labels import RatingScale, label_to_valence_arousal
 from .normalisation import normalise_text
@@ -139,14 +140,29 @@ def main(argv: List[str] | None = None) -> int:
         return 0
 
     if args.command == "evaluate":
-        records = list(
-            iter_text_records(
-                args.path,
-                label_field=args.truth_field,
-            )
-        )
-        truth = [record.label or "" for record in records]
-        predictions = [str(record.metadata.get(args.prediction_field, "")) for record in records]
+        truth, predictions = [], []
+        reader = iter_jsonl if args.path.suffix.lower() == ".jsonl" else iter_csv
+        try:
+            for number, row in enumerate(reader(args.path), start=1):
+                for field, destination in (
+                    (args.truth_field, truth),
+                    (args.prediction_field, predictions),
+                ):
+                    value = row.get(field)
+                    if (
+                        value is None
+                        or not isinstance(value, (str, int, float, bool))
+                        or (isinstance(value, str) and not value.strip())
+                        or (isinstance(value, float) and not math.isfinite(value))
+                    ):
+                        raise ValueError(
+                            f"Record {number} requires a non-empty scalar in field {field!r}."
+                        )
+                    destination.append(str(value))
+            if not truth:
+                raise ValueError("Evaluation requires at least one labelled record.")
+        except (OSError, UnicodeError, ValueError) as exc:
+            parser.error(str(exc))
         _print_json(classification_report(truth, predictions))
         return 0
 
