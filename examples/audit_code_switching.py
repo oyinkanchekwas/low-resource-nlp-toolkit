@@ -1,4 +1,4 @@
-"""Report aggregate token evidence using supplied profiles."""
+"""Calculate code-switching counts for text using language profiles."""
 
 import argparse
 import json

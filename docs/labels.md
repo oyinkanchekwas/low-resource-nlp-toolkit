@@ -15,7 +15,7 @@ print(rating.valence, rating.arousal, rating.scale)
 
 `RatingScale` specifies the common lower and upper bounds for valence and arousal. Both ratings must be finite and lie within those bounds. The source and perspective should describe the material and annotation procedure used for the ratings. Record the resource version when available.
 
-For a dataset with an explicit category mapping, pass `aliases`. To attach dimensional coordinates from an authorised resource, pass `coordinates` with a `RatingScale`. Use the resource's own licence, citation, and access conditions when preparing or sharing the mapping.
+Pass a dataset's category mapping through `aliases`. To attach dimensional coordinates from an authorised resource, pass `coordinates` with a `RatingScale`. Use the resource's own licence, citation, and access conditions when preparing or sharing the mapping.
 
 ```python
 aliases = {"happy": "joy"}
@@ -31,4 +31,4 @@ low-resource-nlp label '0.5#0.7' --scale-min 0 --scale-max 1 --source 'your data
 
 ## Migrating from 0.3.0
 
-Category labels no longer receive coordinates automatically. `other`, `none`, and `neutral` remain separate. Applications that require a dataset-specific mapping can pass their own `aliases` and `coordinates`. Inputs containing a numeric pair require a `RatingScale`; `parse_label_va` remains available for parsing a pair without assigning its meaning.
+Category labels retain their supplied names. `other`, `none`, and `neutral` remain separate. Applications can pass dataset-specific `aliases` and `coordinates`. Inputs containing a numeric pair require a `RatingScale`. The `parse_label_va` function returns the numbers parsed from a pair; interpret them using the source instrument and scale.

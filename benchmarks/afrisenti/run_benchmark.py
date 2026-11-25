@@ -49,7 +49,7 @@ def read_manifest(path: Path = MANIFEST_PATH) -> Mapping[str, object]:
 
 
 def sha256_file(path: Path) -> str:
-    """Hash a file without loading it all into memory."""
+    """Hash a file incrementally in fixed-size chunks."""
 
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -410,7 +410,7 @@ def render_markdown(report: Mapping[str, object]) -> str:
         f"- Task paper: [SemEval-2023 Task 12]({dataset['paper']})",
         "- Dataset paper: [AfriSenti](https://aclanthology.org/2023.emnlp-main.862/)",
         "- Related datasets: [NaijaSenti](https://aclanthology.org/2022.lrec-1.63/) and [ASAB](https://aclanthology.org/2020.coling-main.91/)",
-        "- Source tweets are downloaded locally and hash-checked. They are not committed here.",
+        "- Source tweets reside in local, hash-checked data files.",
         "",
         "## Policy selection",
         "",
@@ -474,15 +474,16 @@ def render_markdown(report: Mapping[str, object]) -> str:
             "",
             (
                 "The selected policy trades coverage for fewer accepted errors. Its score margin "
-                "is a ranking gap. Scores are not calibrated probabilities. The held-out result "
+                "is a ranking gap. Probability estimates require calibration against annotated "
+                "outcomes. The held-out result "
                 "measures this fixed router on this corpus."
             ),
             "",
             (
-                "AfriSenti assigns each tweet to a source-language corpus and includes code-mixed "
-                "text. It does not provide word-level language labels. An English route inside a "
-                "Hausa or Nigerian Pidgin subset may reflect code-mixing, so it is not "
-                "automatically a word-level routing error."
+                "This evaluation scores the route of each whole tweet against its source-corpus "
+                "label. Token-level assessment requires language annotations for each token. "
+                "Code-mixed tweets can contain English tokens within a Hausa or Nigerian Pidgin "
+                "corpus."
             ),
             "",
             "## Reproduce",

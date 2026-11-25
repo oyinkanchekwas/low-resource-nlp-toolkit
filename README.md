@@ -1,6 +1,6 @@
 # Low-Resource NLP Toolkit
 
-Python utilities for multilingual text preparation and evaluation. The package provides Unicode-aware normalisation, configurable lexical routing, token-level evidence audits, emotion-label mappings, and classification metrics.
+Python tools for multilingual text preparation, code-switching analysis, emotion labels, and classification evaluation.
 
 Development version: `0.4.0.dev2`.
 
@@ -15,28 +15,28 @@ low-resource-nlp --version
 
 ## Routing
 
-Routing requires language profiles supplied by the caller. Each profile specifies a code, a name, and lexical or character evidence. A JSON profile collection also records a source description. Use material you have permission to process.
+Define the languages you want to recognise in a JSON profile. Give each language a code and a name, then add words or distinctive characters to match. Describe the material used to build the profiles and check its reuse conditions.
 
-The included profile file uses mechanical test vocabulary and example route identifiers:
+The example at `examples/profiles.json` defines two routes, `a` and `b`, using a small test vocabulary:
 
 ```bash
 low-resource-nlp route "alpha amber" --profiles examples/profiles.json
 low-resource-nlp audit "alpha beta" --profiles examples/profiles.json
 ```
 
-For your own data, supply your profile file through `--profiles`. The Python API accepts the same file:
+Replace the example path with the path to your language profiles when processing your text. The Python API reads the same JSON format:
 
 ```python
 from low_resource_nlp import LexicalLanguageRouter, audit_code_switching, load_profiles
 
 router = LexicalLanguageRouter(load_profiles("examples/profiles.json"))
 route = router.route_selectively("alpha amber", min_score_margin=0.75)
-audit = audit_code_switching("alpha beta", router=router)
+result = audit_code_switching("alpha beta", router=router)
 print(route.accepted_language_code)
-print(audit.to_aggregate_dict())
+print(result.to_aggregate_dict())
 ```
 
-Routing scores describe relative evidence within the supplied profiles. Thresholds and language performance need evaluation on data appropriate to the intended task. Token audits expose evidence, offsets, and unassigned tokens; they do not provide independently annotated language labels.
+With mixed-language text, you can see which words match each language profile and where the suggested language changes within a sentence. Test your profiles and thresholds against labelled examples from the setting where you plan to use the toolkit.
 
 ## Text and emotion labels
 
@@ -46,19 +46,19 @@ low-resource-nlp label joy
 low-resource-nlp label '0.5#0.7' --scale-min 0 --scale-max 1 --source 'my dataset' --perspective reader
 ```
 
-Category names remain distinct unless a caller provides an explicit mapping. Dimensional ratings require a scale, source, and annotation perspective. See [Emotion labels and ratings](docs/labels.md).
+Category names remain distinct unless a caller supplies a mapping. Dimensional ratings require a scale, source, and annotation perspective. See [Emotion labels and ratings](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/labels/).
 
 ## Evaluation
 
-`classification_report` reports class-level metrics and a confusion matrix. `selective_classification_report` reports coverage and accuracy among accepted records, with undefined values represented explicitly. The [corpus tutorial](docs/tutorial.md) describes routing a CSV or JSONL file.
+`classification_report` reports class-level metrics and a confusion matrix. `selective_classification_report` reports coverage and accuracy among accepted records. Undefined metrics use `None` in Python and `null` in JSON. The [corpus tutorial](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/tutorial/) describes routing a CSV or JSONL file.
 
 The `evaluate` command requires a non-empty CSV or JSONL file with `label` and `prediction` fields. Use `--truth-field` and `--prediction-field` for other column names. Missing, null, blank, structured, or non-finite labels are rejected before scoring; numeric zero is a valid label.
 
 ## Migration
 
-The `route` and `audit` commands require `--profiles`. Construct a Python router with explicit profiles and pass it to `audit_code_switching`. Calling `LexicalLanguageRouter.default()` raises a configuration error. Emotion categories no longer receive automatic coordinates, and the previous category-list constant has been removed.
+The `route` and `audit` commands take a `--profiles` path. In Python, construct `LexicalLanguageRouter(load_profiles(path))` and pass the router to `audit_code_switching`. Replace calls to `LexicalLanguageRouter.default()` with this pattern. Use `aliases` for category mappings and `coordinates` with a `RatingScale` for dimensional values. Remove imports of the old category-list constant.
 
-Earlier benchmark results concern version 0.3.0. See the [historical benchmark](docs/benchmark.md) for the original version and sources.
+Earlier benchmark results concern version 0.3.0. See the [historical benchmark](https://oyinkanchekwas.github.io/low-resource-nlp-toolkit/benchmark/) for the original version and sources.
 
 ## Checks
 

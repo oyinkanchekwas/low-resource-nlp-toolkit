@@ -40,7 +40,7 @@ def build_parser() -> argparse.ArgumentParser:
     route.add_argument("--min-confidence", type=float, default=0.0)
     route.add_argument("--min-score-margin", type=float, default=0.0)
 
-    audit = subcommands.add_parser("audit", help="Audit language evidence across a text string.")
+    audit = subcommands.add_parser("audit", help="Examine language changes within a text.")
     audit.add_argument("text")
     audit.add_argument("--profiles", required=True, type=Path)
     audit.add_argument("--min-confidence", type=float, default=0.55)
