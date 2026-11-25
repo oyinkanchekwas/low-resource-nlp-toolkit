@@ -1,7 +1,7 @@
 # Low-Resource NLP Toolkit
 
-The toolkit supports multilingual text preparation, configurable lexical routing, token evidence audits, emotion-label mappings, and classification evaluation.
+Use the toolkit to prepare multilingual corpora, examine code-switching, work with emotion labels, and compare predictions with reference annotations.
 
-Routing uses profiles supplied by the caller. A profile file records its source and the evidence assigned to each route. The included example uses test vocabulary with example route identifiers.
+Define each language through a vocabulary and, where useful, distinctive characters. The tutorial uses `a` and `b` as route labels to demonstrate how matching works.
 
-The [corpus tutorial](tutorial.md) covers profile configuration, CSV and JSONL input, and aggregate audit output. [Emotion labels and ratings](labels.md) describes explicit category mappings and dimensional scales. [Technical scope](scope.md) explains how to interpret routing scores and audit output.
+The [corpus tutorial](tutorial.md) covers profile configuration, CSV and JSONL input, and code-switching analysis. [Emotion labels and ratings](labels.md) explains category mappings and dimensional scales. [Technical scope](scope.md) describes routing scores and the interpretation of word-level results.

@@ -10,7 +10,7 @@
 
 ## 0.4.0.dev1
 
-- Require caller-supplied profiles for routing and token audits.
+- Require language profiles for message-level and word-level routing.
 - Add a JSON profile loader with configuration validation.
 - Remove the ASCII-only English score adjustment.
 - Remove the fixed emotion-category list and automatic label coordinates.
@@ -19,13 +19,13 @@
 
 ## 0.4.0 (Unreleased)
 
-- Keep supplied emotion categories distinct unless an explicit alias mapping is provided.
+- Keep emotion categories distinct unless a caller defines an alias mapping.
 - Accept dimensional ratings with a declared scale, source, and annotation perspective.
 - Validate finite rating values against the declared scale.
 
 ## 0.3.1 (Unreleased)
 
-- Exclude links and usernames from routing and token-audit evidence.
+- Exclude links and usernames from message-level and word-level matching.
 - Reject non-finite score-margin thresholds and non-boolean acceptance values.
 - Return undefined selective metrics and intervals when their denominators are zero.
 - Include benchmark files in the source distribution.
@@ -57,14 +57,14 @@
 
 ### Added
 
-- Code-switch audit reports for short multilingual text, including token routes, character offsets, accepted spans, language-mix counts, and warnings.
+- Word-level code-switching analysis for short multilingual text, with language assignments, character positions, spans, language counts, and warnings.
 - `low-resource-nlp audit` CLI command for evidence-first corpus triage.
 - Technical scope notes that explain where the toolkit fits alongside broader African NLP and language-identification work.
 
 ### Design Notes
 
-- The audit layer complements high-coverage model-based language identification. It favours inspectable evidence and abstention on weak token routes.
-- The package remains dependency-light so the audit can run in constrained research and teaching environments.
+- Word-level classifications support the study of language changes within a message. Confidence and margin thresholds leave weak matches unassigned.
+- The package's small dependency footprint supports research and teaching in constrained environments.
 
 ## 0.1.0 - 2026-07-01
 

@@ -1,6 +1,6 @@
 # Route a corpus
 
-A profile file contains a source description and a list of routes. The demonstration below uses test vocabulary; its route identifiers do not denote languages.
+A profile file contains a source description and a list of routes. The demonstration below uses test vocabulary with route identifiers `a` and `b`.
 
 ```json
 {
@@ -14,13 +14,13 @@ A profile file contains a source description and a list of routes. The demonstra
 
 The source distribution includes this configuration at `examples/profiles.json`. With a wheel installation, create a JSON file using the configuration above or supply your own authorised profile collection.
 
-Each profile requires `code` and `name`. Evidence fields are `keywords`, `stopwords`, and `unique_chars`, each a list of strings. At least one evidence field must be populated. Codes must be distinct; `und` and `ambiguous` are reserved for unassigned outcomes. A source description records the material used to construct the profiles; it does not establish permission to redistribute that material.
+Each profile requires `code` and `name`. Evidence fields are `keywords`, `stopwords`, and `unique_chars`, each a list of strings. At least one evidence field must be populated. Codes must be distinct; `und` and `ambiguous` are reserved for unassigned outcomes. A source description identifies the material used to construct the profiles. Reuse and redistribution follow that material's licence and access conditions.
 
 The Python API accepts list or tuple evidence fields and stores an immutable snapshot. Character evidence uses the same NFC and lowercase normalisation as the input, with diacritics preserved. Equivalent character entries contribute one signal.
 
 ## CSV and JSONL input
 
-This script reads a file with a `text` column or field and an optional `lang` field. It writes routing outcomes without copying the input text.
+This script reads a file with a `text` column or field and an optional `lang` field. Output records contain the input row number, reference language, accepted route, score margin, and abstention reason.
 
 ```python
 import argparse
@@ -65,16 +65,16 @@ For a mechanical smoke test, a JSONL file can contain:
 {"text": "beta bravo", "lang": "b"}
 ```
 
-## Token audits
+## Examining code-switching
 
 ```python
 from low_resource_nlp import LexicalLanguageRouter, audit_code_switching, load_profiles
 
 router = LexicalLanguageRouter(load_profiles("examples/profiles.json"))
-audit = audit_code_switching("alpha beta", router=router)
-print(audit.to_aggregate_dict())
+result = audit_code_switching("alpha beta", router=router)
+print(result.to_aggregate_dict())
 ```
 
-The full audit includes the original text and token evidence. Aggregate output contains counts and the code-switch ratio. It omits text, route names, and route codes. Offsets in the full output refer to the original input.
+Use the word-level results to examine where a sentence changes language. Each word is linked to its position in the input, so you can compare the suggested language with a reference annotation. The `to_dict()` method returns the input text alongside these results. Call `to_aggregate_dict()` for counts and the code-switch ratio.
 
 Evaluate profile changes and thresholds on development data. Keep evaluation records separate from profile construction, account for duplicate and document relationships, and state the annotation unit used as a reference.

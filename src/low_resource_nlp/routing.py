@@ -162,7 +162,7 @@ class LexicalLanguageRouter:
 
     @classmethod
     def default(cls) -> "LexicalLanguageRouter":
-        """Require explicit profiles when migrating older callers."""
+        """Require caller-supplied profiles when migrating older callers."""
 
         raise ValueError("Supply profiles with LexicalLanguageRouter(load_profiles(path)).")
 
@@ -240,7 +240,7 @@ class LexicalLanguageRouter:
         min_confidence: float = 0.0,
         min_score_margin: float = 0.0,
     ) -> SelectiveRouteDecision:
-        """Route text and abstain when the evidence does not meet both thresholds."""
+        """Route text with abstention below either threshold or for an undetermined result."""
 
         if not 0.0 <= min_confidence <= 1.0:
             raise ValueError("min_confidence must be between 0 and 1.")

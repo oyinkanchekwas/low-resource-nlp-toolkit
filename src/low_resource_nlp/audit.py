@@ -1,4 +1,4 @@
-"""Evidence-first audits for noisy and code-switched low-resource text."""
+"""Examine code-switching in multilingual text."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ _CHARACTER_REFERENCE = re.compile(r"&(?:#[0-9]+;?|#[xX][0-9a-fA-F]+;?|[^\t\n\f <
 class TokenAudit:
     """Routing evidence for one token.
 
-    Confidence is the router's relative score, not a calibrated probability.
+    Confidence is the winning route's share of the total positive routing score.
     """
 
     text: str
@@ -60,7 +60,7 @@ class TokenAudit:
 class LanguageSpan:
     """A contiguous run of tokens with the same accepted route.
 
-    Mean confidence averages relative token scores; it is not a probability.
+    Mean confidence averages the tokens' relative routing scores.
     """
 
     language_code: str
@@ -87,7 +87,7 @@ class LanguageSpan:
 
 @dataclass(frozen=True)
 class CodeSwitchAudit:
-    """Structured audit for a short multilingual text."""
+    """Word-level language results for a short multilingual text."""
 
     text: str
     dominant_language_code: str
@@ -119,7 +119,7 @@ class CodeSwitchAudit:
         }
 
     def to_aggregate_dict(self) -> Dict[str, object]:
-        """Return counts and ratios without the input or token records.
+        """Return token counts, language count, and code-switch ratio.
 
         Aggregate values can still reveal information about small inputs.
         """
@@ -186,7 +186,7 @@ def _ignored_text_ranges(text: str) -> List[tuple[int, int]]:
         decoded.extend(value)
         offsets.extend((start + i, start + i + 1) for i in range(len(value)))
 
-    # Decoded characters retain their source interval so audit offsets stay in
+    # Decoded characters retain their source interval so character offsets stay in
     # the original input even when an HTML reference changes length.
     for match in _CHARACTER_REFERENCE.finditer(text):
         append_literal(text[position : match.start()], position)
@@ -254,7 +254,7 @@ def audit_token(
     min_confidence: float,
     min_score_margin: float,
 ) -> TokenAudit:
-    """Audit one token and decide whether its route is strong enough to use."""
+    """Suggest a language for a word using the configured thresholds."""
 
     _validate_thresholds(min_confidence, min_score_margin)
     decision = router.route(token)
@@ -380,18 +380,18 @@ def audit_code_switching(
     min_confidence: float = 0.55,
     min_score_margin: float = 0.75,
 ) -> CodeSwitchAudit:
-    """Audit language evidence across tokens in a short text.
+    """Examine word-level language changes within a short text.
 
-    Use the audit for corpus triage, never identity inference. It favours
+    Use the results for corpus analysis, never identity inference. It favours
     abstention when token-level evidence is weak or confusable.
-    Confidence values are relative routing scores, not calibrated probabilities.
+    Confidence values express the winning route's share of positive routing scores.
     Links, usernames, and non-word HTML character references are excluded from
     token evidence; the original text is retained in the report.
     """
 
     _validate_thresholds(min_confidence, min_score_margin)
     if router is None:
-        raise ValueError("Supply a router configured with explicit language profiles.")
+        raise ValueError("Supply a router configured with caller-supplied language profiles.")
     active_router = router
     ignored_ranges = _ignored_text_ranges(text or "")
     masked = list(text or "")

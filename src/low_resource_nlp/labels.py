@@ -50,7 +50,7 @@ class RatingScale:
 
 
 def normalise_emotion_label(label: str, *, aliases: Optional[Mapping[str, str]] = None) -> str:
-    """Normalise spelling and apply explicitly supplied label mappings."""
+    """Normalise spelling and apply caller-supplied label mappings."""
 
     if not isinstance(label, str):
         raise TypeError("Label must be a string.")

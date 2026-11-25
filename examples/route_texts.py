@@ -1,4 +1,4 @@
-"""Route supplied text with an explicit profile collection."""
+"""Route supplied text with a caller-supplied profile collection."""
 
 import argparse
 import json

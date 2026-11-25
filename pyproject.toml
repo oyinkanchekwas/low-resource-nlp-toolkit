@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "low-resource-nlp-toolkit"
 version = "0.4.0.dev2"
-description = "Python tools for multilingual text preparation, configurable routing, evidence audits, and evaluation."
+description = "Python tools for multilingual text preparation, language routing, code-switching analysis, and evaluation."
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
